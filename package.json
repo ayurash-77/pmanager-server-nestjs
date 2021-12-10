@@ -2,9 +2,9 @@
   "name": "pmanager-server-nestjs",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "Aleksey Yurash",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "AYurash",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
