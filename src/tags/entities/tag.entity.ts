@@ -8,7 +8,7 @@ export class Tag {
   id: number;
 
   @ApiProperty({ example: 'Overview', description: 'Имя тега' })
-  @Column()
+  @Column({ unique: true })
   name: string;
 
   @AfterInsert()
