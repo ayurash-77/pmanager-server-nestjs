@@ -25,16 +25,22 @@ export class TagsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.tagsService.findOne(+id);
+  @ApiOperation({ summary: 'Получить тег по ID' })
+  @ApiResponse({ status: 200, type: Tag })
+  findById(@Param('id') id: string) {
+    return this.tagsService.findById(+id);
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: 'Изменить тег по ID' })
+  @ApiResponse({ status: 200, type: Tag })
   update(@Param('id') id: string, @Body() updateTagDto: UpdateTagDto) {
     return this.tagsService.update(+id, updateTagDto);
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Удалить тег по ID' })
+  @ApiResponse({ status: 200, type: Tag })
   remove(@Param('id') id: string) {
     return this.tagsService.remove(+id);
   }

@@ -23,7 +23,7 @@ export class TagsService {
     return await this.repo.find();
   }
 
-  async findOne(id: number) {
+  async findById(id: number): Promise<Tag | null> {
     const tag = await this.repo.findOne(id);
     if (!tag) {
       throw new NotFoundException(`Тег с ID=${id} не найден`);
@@ -31,7 +31,7 @@ export class TagsService {
     return tag;
   }
 
-  async update(id: number, updateTagDto: UpdateTagDto) {
+  async update(id: number, updateTagDto: UpdateTagDto): Promise<Tag> {
     const tag = await this.repo.findOne(id);
     if (!tag) {
       throw new NotFoundException(`Тег с ID=${id} не найден`);
@@ -40,7 +40,7 @@ export class TagsService {
     return this.repo.save(tag);
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<Tag> {
     const tag = await this.repo.findOne(id);
     if (!tag) {
       throw new NotFoundException(`Тег с ID=${id} не найден`);
