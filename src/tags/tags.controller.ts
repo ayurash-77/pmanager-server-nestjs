@@ -20,7 +20,7 @@ export class TagsController {
   @Get()
   @ApiOperation({ summary: 'Получить все теги' })
   @ApiResponse({ status: 200, type: [Tag] })
-  findAll(): Promise<Tag[]> {
+  findAll() {
     return this.tagsService.findAll();
   }
 

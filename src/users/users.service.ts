@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,23 +9,41 @@ import { Repository } from 'typeorm';
 export class UsersService {
   constructor(@InjectRepository(User) private repo: Repository<User>) {}
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const email = createUserDto.email;
+    if (await this.repo.findOne({ email })) {
+      throw new BadRequestException(`Пользователь с email ${createUserDto.email} уже существует`);
+    }
+    const user = this.repo.create(createUserDto);
+    return await this.repo.save(user);
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll(): Promise<User[]> {
+    return await this.repo.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findById(id: number): Promise<User | null> {
+    const user = await this.repo.findOne(id);
+    if (!user) {
+      throw new NotFoundException(`Пользователь с ID=${id} не найден`);
+    }
+    return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+    const user = await this.repo.findOne(id);
+    if (!user) {
+      throw new NotFoundException(`Пользователь с ID=${id} не найден`);
+    }
+    Object.assign(user, updateUserDto);
+    return this.repo.save(user);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number): Promise<User> {
+    const user = await this.repo.findOne(id);
+    if (!user) {
+      throw new NotFoundException(`Пользователь с ID=${id} не найден`);
+    }
+    return this.repo.remove(user);
   }
 }
