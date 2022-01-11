@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import * as colors from 'colors';
+import { ValidationPipe } from '@nestjs/common';
 
 const PORT = process.env.PORT || 3000;
 
@@ -17,6 +18,7 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/api/docs', app, document);
+  app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(PORT);
 }
