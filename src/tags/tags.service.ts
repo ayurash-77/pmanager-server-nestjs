@@ -7,24 +7,24 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class TagsService {
-  constructor(@InjectRepository(Tag) private tagRepo: Repository<Tag>) {}
+  constructor(@InjectRepository(Tag) private repo: Repository<Tag>) {}
 
   async create(createTagDto: CreateTagDto): Promise<Tag> {
     const name = createTagDto.name;
 
-    if (await this.tagRepo.findOne({ name })) {
+    if (await this.repo.findOne({ name })) {
       throw new BadRequestException(`Тег ${createTagDto.name} уже существует`);
     }
-    const tag = this.tagRepo.create(createTagDto);
-    return await this.tagRepo.save(tag);
+    const tag = this.repo.create(createTagDto);
+    return await this.repo.save(tag);
   }
 
   async findAll(): Promise<Tag[]> {
-    return await this.tagRepo.find();
+    return await this.repo.find();
   }
 
   async findOne(id: number) {
-    const tag = await this.tagRepo.findOne(id);
+    const tag = await this.repo.findOne(id);
     if (!tag) {
       throw new NotFoundException(`Тег с ID=${id} не найден`);
     }
@@ -32,19 +32,19 @@ export class TagsService {
   }
 
   async update(id: number, updateTagDto: UpdateTagDto) {
-    const tag = await this.tagRepo.findOne(id);
+    const tag = await this.repo.findOne(id);
     if (!tag) {
       throw new NotFoundException(`Тег с ID=${id} не найден`);
     }
     Object.assign(tag, updateTagDto);
-    return this.tagRepo.save(tag);
+    return this.repo.save(tag);
   }
 
   async remove(id: number) {
-    const tag = await this.tagRepo.findOne(id);
+    const tag = await this.repo.findOne(id);
     if (!tag) {
       throw new NotFoundException(`Тег с ID=${id} не найден`);
     }
-    return this.tagRepo.remove(tag);
+    return this.repo.remove(tag);
   }
 }
