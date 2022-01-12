@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -6,6 +6,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
 import { UserResponseInterface } from './types/userResponse.interface';
 import { LoginUserDto } from './dto/login-user.dto';
+import { Request } from 'express';
 
 @ApiTags('Пользователи')
 @Controller('api/users')
@@ -25,6 +26,11 @@ export class UsersController {
   async login(@Body() loginUserDto: LoginUserDto): Promise<UserResponseInterface> {
     const user = await this.usersService.login(loginUserDto);
     return this.usersService.buildUserResponse(user);
+  }
+
+  @Get('current')
+  async currentUser(@Req() request: Request): Promise<UserResponseInterface> {
+    return 'Current User' as any;
   }
 
   @Get()
