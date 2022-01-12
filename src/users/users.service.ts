@@ -66,8 +66,8 @@ export class UsersService {
     return await this.repo.save(user);
   }
 
-  async findAll(): Promise<User[]> {
-    return await this.repo.find();
+  findAll(): Promise<User[]> {
+    return this.repo.find();
   }
 
   async findById(id: number): Promise<User | null> {

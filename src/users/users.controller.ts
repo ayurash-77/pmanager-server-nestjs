@@ -3,10 +3,11 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { User } from './entities/user.entity';
 import { UserResponseInterface } from './types/userResponse.interface';
 import { LoginUserDto } from './dto/login-user.dto';
-import { Request } from 'express';
+import { ExpressRequestInterface } from '@app/types/expressRequest.interface';
+import { UserDecorator } from '@app/users/decorators/user.decorator';
+import { User } from '@app/users/entities/user.entity';
 
 @ApiTags('Пользователи')
 @Controller('api/users')
@@ -29,8 +30,8 @@ export class UsersController {
   }
 
   @Get('current')
-  async currentUser(@Req() request: Request): Promise<UserResponseInterface> {
-    return 'Current User' as any;
+  async currentUser(@UserDecorator() user: User): Promise<UserResponseInterface> {
+    return this.usersService.buildUserResponse(user);
   }
 
   @Get()
