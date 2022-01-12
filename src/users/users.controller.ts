@@ -1,13 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserResponseInterface } from './types/userResponse.interface';
 import { LoginUserDto } from './dto/login-user.dto';
-import { ExpressRequestInterface } from '@app/types/expressRequest.interface';
 import { UserDecorator } from '@app/users/decorators/user.decorator';
 import { User } from '@app/users/entities/user.entity';
+import { AuthGuard } from '@app/users/guards/auth.guard';
 
 @ApiTags('Пользователи')
 @Controller('api/users')
@@ -30,7 +30,11 @@ export class UsersController {
   }
 
   @Get('current')
-  async currentUser(@UserDecorator() user: User): Promise<UserResponseInterface> {
+  @UseGuards(AuthGuard)
+  async currentUser(
+    @UserDecorator() user: User,
+    @UserDecorator('id') userId: number,
+  ): Promise<UserResponseInterface> {
     return this.usersService.buildUserResponse(user);
   }
 
