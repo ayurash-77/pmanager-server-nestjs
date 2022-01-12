@@ -8,6 +8,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import * as colors from 'colors';
 import { ValidationPipe } from '@nestjs/common';
+
 const PORT = process.env.PORT || 3000;
 
 const mode = process.env.NODE_ENV.toUpperCase().split('-')[1];

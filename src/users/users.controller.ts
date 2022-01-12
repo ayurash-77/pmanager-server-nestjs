@@ -25,8 +25,6 @@ export class UsersController {
   async login(@Body() loginUserDto: LoginUserDto): Promise<UserResponseInterface> {
     const user = await this.usersService.login(loginUserDto);
     return this.usersService.buildUserResponse(user);
-    // console.log('loginUserDto', loginUserDto);
-    // return 'LOGIN' as any;
   }
 
   @Get()
