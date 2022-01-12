@@ -1,12 +1,20 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsString } from 'class-validator';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { User } from '../entities/user.entity';
 
-export class CreateUserDto {
-  @ApiProperty({ example: 'user@mail.ru', description: 'Email пользователя' })
-  @IsEmail({ message: 'Должен быть валидный формат Email' })
-  readonly email: string;
-
-  @ApiProperty({ example: '123123', description: 'Пароль пользователя' })
-  @IsString({ message: 'Пароль должен быть строкой' })
-  readonly password: string;
+export class CreateUserDto extends PartialType(User) {
+  // @ApiProperty({ example: 'vasyapupkin', description: 'Username' })
+  // @IsNotEmpty()
+  // @IsString()
+  // readonly username: string;
+  //
+  // @ApiProperty({ example: 'user@mail.ru', description: 'Email пользователя' })
+  // @IsNotEmpty()
+  // @IsEmail()
+  // readonly email: string;
+  //
+  // @ApiProperty({ example: '123123', description: 'Пароль пользователя' })
+  // @IsNotEmpty()
+  // @IsString()
+  // readonly password: string;
 }

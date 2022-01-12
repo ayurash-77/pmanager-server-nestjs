@@ -4,6 +4,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
+import { UserResponseInterface } from './types/userResponse.interface';
+import { LoginUserDto } from './dto/login-user.dto';
 
 @ApiTags('Пользователи')
 @Controller('api/users')
@@ -13,8 +15,18 @@ export class UsersController {
   @Post()
   @ApiOperation({ summary: 'Регистрация нового пользователя' })
   @ApiResponse({ status: 200, type: User })
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto): Promise<UserResponseInterface> {
+    const user = await this.usersService.create(createUserDto);
+    return this.usersService.buildUserResponse(user);
+  }
+
+  @Post('login')
+  @ApiOperation({ summary: 'Login user' })
+  async login(@Body() loginUserDto: LoginUserDto): Promise<UserResponseInterface> {
+    const user = await this.usersService.login(loginUserDto);
+    return this.usersService.buildUserResponse(user);
+    // console.log('loginUserDto', loginUserDto);
+    // return 'LOGIN' as any;
   }
 
   @Get()
