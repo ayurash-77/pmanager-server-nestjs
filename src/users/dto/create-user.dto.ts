@@ -1,20 +1,32 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
-import { User } from '../entities/user.entity';
+import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { UserModel } from '@app/users/models/user.model';
 
-export class CreateUserDto extends PartialType(User) {
-  // @ApiProperty({ example: 'vasyapupkin', description: 'Username' })
-  // @IsNotEmpty()
-  // @IsString()
-  // readonly username: string;
-  //
-  // @ApiProperty({ example: 'user@mail.ru', description: 'Email пользователя' })
-  // @IsNotEmpty()
-  // @IsEmail()
-  // readonly email: string;
-  //
-  // @ApiProperty({ example: '123123', description: 'Пароль пользователя' })
-  // @IsNotEmpty()
-  // @IsString()
-  // readonly password: string;
+export class CreateUserDto extends UserModel {
+  @IsNotEmpty()
+  @IsString()
+  username: string;
+
+  @IsNotEmpty()
+  @IsEmail()
+  email: string;
+
+  @IsNotEmpty()
+  @IsString()
+  password: string;
+
+  @IsString()
+  @IsOptional()
+  name?: string;
+
+  @IsString()
+  @IsOptional()
+  surname?: string;
+
+  @IsString()
+  @IsOptional()
+  phone?: string;
+
+  @IsString()
+  @IsOptional()
+  image?: string;
 }

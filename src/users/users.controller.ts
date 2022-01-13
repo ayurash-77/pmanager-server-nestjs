@@ -10,11 +10,11 @@ import { User } from '@app/users/entities/user.entity';
 import { AuthGuard } from '@app/users/guards/auth.guard';
 
 @ApiTags('Пользователи')
-@Controller('api/users')
+@Controller('api')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
+  @Post('users')
   @ApiOperation({ summary: 'Регистрация нового пользователя' })
   @ApiResponse({ status: 200, type: User })
   async create(@Body() createUserDto: CreateUserDto): Promise<UserResponseInterface> {
@@ -22,44 +22,61 @@ export class UsersController {
     return this.usersService.buildUserResponse(user);
   }
 
-  @Post('login')
+  @Post('users/login')
   @ApiOperation({ summary: 'Login user' })
   async login(@Body() loginUserDto: LoginUserDto): Promise<UserResponseInterface> {
     const user = await this.usersService.login(loginUserDto);
     return this.usersService.buildUserResponse(user);
   }
 
-  @Get('current')
+  @Get('user')
   @UseGuards(AuthGuard)
-  async currentUser(
-    @UserDecorator() user: User,
-    @UserDecorator('id') userId: number,
-  ): Promise<UserResponseInterface> {
+  @ApiOperation({ summary: 'Получить текущего пользователя' })
+  @ApiResponse({ status: 200, type: User })
+  async currentUser(@UserDecorator() user: User): Promise<UserResponseInterface> {
     return this.usersService.buildUserResponse(user);
   }
 
-  @Get()
+  @Get('users')
   @ApiOperation({ summary: 'Получить всех пользователей' })
   @ApiResponse({ status: 200, type: [User] })
   findAll() {
     return this.usersService.findAll();
   }
 
-  @Get(':id')
+  @Get('users/:id')
   @ApiOperation({ summary: 'Получить пользователя по ID' })
   @ApiResponse({ status: 200, type: User })
-  findById(@Param('id') id: string) {
-    return this.usersService.findById(+id);
+  async findById(@Param('id') id: string): Promise<UserResponseInterface> {
+    const user = await this.usersService.findById(+id);
+    return this.usersService.buildUserResponse(user);
   }
 
-  @Patch(':id')
+  @Patch('users/:id')
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Изменить пользователя по ID' })
   @ApiResponse({ status: 200, type: User })
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  async updateById(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ): Promise<UserResponseInterface> {
+    const user = await this.usersService.updateById(+id, updateUserDto);
+    return this.usersService.buildUserResponse(user);
   }
 
-  @Delete(':id')
+  @Patch('user')
+  @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Изменить текущего пользователя' })
+  @ApiResponse({ status: 200, type: User })
+  async updateCurrent(
+    @UserDecorator() user: User,
+    @Body() updateUserDto: UpdateUserDto,
+  ): Promise<UserResponseInterface> {
+    const updatedUser = await this.usersService.updateById(user.id, updateUserDto);
+    return this.usersService.buildUserResponse(updatedUser);
+  }
+
+  @Delete('users/:id')
   @ApiOperation({ summary: 'Удалить пользователя по ID' })
   @ApiResponse({ status: 200, type: User })
   remove(@Param('id') id: string) {

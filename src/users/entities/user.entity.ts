@@ -1,59 +1,41 @@
-import {
-  AfterInsert,
-  AfterRemove,
-  AfterUpdate,
-  BeforeInsert,
-  BeforeUpdate,
-  Column,
-  Entity,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
+import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { hash } from 'bcrypt';
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { UserModel } from '@app/users/models/user.model';
 
 @Entity({ name: 'users' })
-export class User {
+export class User extends UserModel {
   @ApiProperty({ example: 1, description: 'Уникальный ID' })
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ApiProperty({ example: 'vasyapupkin', description: 'Username' })
-  @IsNotEmpty()
-  @IsString()
   @Column({ unique: true })
   username: string;
 
-  @ApiProperty({ example: 'user@mail.com', description: 'Email пользователя' })
-  @IsNotEmpty()
-  @IsEmail()
   @Column({ unique: true })
   email: string;
 
-  @ApiProperty({ example: '123123', description: 'Пароль пользователя' })
-  @IsNotEmpty()
-  @IsString()
   @Column({ select: false })
   password: string;
 
-  @ApiProperty({ example: 'Вася', description: 'Имя пользователя' })
+  @ApiPropertyOptional()
   @Column({ nullable: true })
-  name: string;
+  name?: string;
 
-  @ApiProperty({ example: 'Пупкин', description: 'Фамилия пользователя' })
+  @ApiPropertyOptional()
   @Column({ nullable: true })
-  surname: string;
+  surname?: string;
 
-  @ApiProperty({ example: '9648889900', description: 'Мобильный телефон' })
+  @ApiPropertyOptional()
   @Column({ nullable: true })
-  phone: string;
+  phone?: string;
 
-  @ApiProperty({ example: '/path/aaa.jpg', description: 'Фото пользователя' })
+  @ApiPropertyOptional()
   @Column({ nullable: true })
-  image: string;
+  image?: string;
 
   @BeforeInsert()
-  // @BeforeUpdate()
+  //@BeforeUpdate()
   async hashPassword() {
     this.password = await hash(this.password, 5);
   }

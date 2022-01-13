@@ -78,7 +78,7 @@ export class UsersService {
     return user;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+  async updateById(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.repo.findOne(id);
     if (!user) {
       throw new NotFoundException(`Пользователь с ID=${id} не найден`);
