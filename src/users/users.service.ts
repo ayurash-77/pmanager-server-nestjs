@@ -1,4 +1,10 @@
-import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -51,14 +57,21 @@ export class UsersService {
     return user;
   }
 
+  // Регистрация нового пользователя
   async create(createUserDto: CreateUserDto): Promise<User> {
     const findByUsername = await this.repo.findOne({ username: createUserDto.username });
     const findByEmail = await this.repo.findOne({ email: createUserDto.email });
     if (findByUsername) {
-      throw new UnprocessableEntityException(`Пользователь '${createUserDto.username}' уже существует`);
+      throw new HttpException(
+        `Пользователь '${createUserDto.username}' уже существует`,
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
     }
     if (findByEmail) {
-      throw new UnprocessableEntityException(`Пользователь с email '${createUserDto.email}' уже существует`);
+      throw new HttpException(
+        `Пользователь с email '${createUserDto.email}' уже существует`,
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
     }
 
     const user = new User();
@@ -72,26 +85,41 @@ export class UsersService {
 
   async findById(id: number): Promise<User | null> {
     const user = await this.repo.findOne(id);
-    if (!user) {
-      throw new NotFoundException(`Пользователь с ID=${id} не найден`);
-    }
+    if (!user) throw new HttpException(`Пользователь с ID=${id} не найден`, HttpStatus.NOT_FOUND);
     return user;
   }
 
+  async isTaken(key: string, value: string): Promise<boolean> {
+    return !!(await this.repo.findOne({ [key]: value }));
+  }
+
+  // Изменить пользователя по ID
   async updateById(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    const user = await this.repo.findOne(id);
-    if (!user) {
-      throw new NotFoundException(`Пользователь с ID=${id} не найден`);
+    const user = await this.findById(id);
+
+    const isUsernameTaken = await this.isTaken('username', updateUserDto.username);
+    if (isUsernameTaken) {
+      throw new HttpException(
+        `Пользователь с username '${updateUserDto.username}' уже существует`,
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
     }
+
+    const isEmailTaken = await this.isTaken('email', updateUserDto.email);
+    if (isEmailTaken) {
+      throw new HttpException(
+        `Пользователь с email '${updateUserDto.email}' уже существует`,
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
+
     Object.assign(user, updateUserDto);
     return this.repo.save(user);
   }
 
   async remove(id: number): Promise<User> {
     const user = await this.repo.findOne(id);
-    if (!user) {
-      throw new NotFoundException(`Пользователь с ID=${id} не найден`);
-    }
+    if (!user) throw new NotFoundException(`Пользователь с ID=${id} не найден`);
     return this.repo.remove(user);
   }
 }

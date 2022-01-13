@@ -14,6 +14,7 @@ import { AuthGuard } from '@app/users/guards/auth.guard';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  // Регистрация нового пользователя
   @Post('users')
   @ApiOperation({ summary: 'Регистрация нового пользователя' })
   @ApiResponse({ status: 200, type: User })
@@ -22,13 +23,15 @@ export class UsersController {
     return this.usersService.buildUserResponse(user);
   }
 
+  // Авторизация
   @Post('users/login')
-  @ApiOperation({ summary: 'Login user' })
+  @ApiOperation({ summary: 'Авторизация' })
   async login(@Body() loginUserDto: LoginUserDto): Promise<UserResponseInterface> {
     const user = await this.usersService.login(loginUserDto);
     return this.usersService.buildUserResponse(user);
   }
 
+  // Получить текущего пользователя
   @Get('user')
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Получить текущего пользователя' })
@@ -37,6 +40,7 @@ export class UsersController {
     return this.usersService.buildUserResponse(user);
   }
 
+  // Получить всех пользователей
   @Get('users')
   @ApiOperation({ summary: 'Получить всех пользователей' })
   @ApiResponse({ status: 200, type: [User] })
@@ -44,6 +48,7 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  // Получить пользователя по ID
   @Get('users/:id')
   @ApiOperation({ summary: 'Получить пользователя по ID' })
   @ApiResponse({ status: 200, type: User })
@@ -52,6 +57,7 @@ export class UsersController {
     return this.usersService.buildUserResponse(user);
   }
 
+  // Изменить пользователя по ID
   @Patch('users/:id')
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Изменить пользователя по ID' })
@@ -64,6 +70,7 @@ export class UsersController {
     return this.usersService.buildUserResponse(user);
   }
 
+  // Изменить текущего пользователя
   @Patch('user')
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Изменить текущего пользователя' })
@@ -76,6 +83,7 @@ export class UsersController {
     return this.usersService.buildUserResponse(updatedUser);
   }
 
+  // Удалить пользователя по ID
   @Delete('users/:id')
   @ApiOperation({ summary: 'Удалить пользователя по ID' })
   @ApiResponse({ status: 200, type: User })
