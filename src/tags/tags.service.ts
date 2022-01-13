@@ -22,6 +22,7 @@ export class TagsService {
     return await this.repo.find();
   }
 
+  // Получить тег по ID
   async getById(id: number): Promise<Tag | null> {
     const tag = await this.repo.findOne(id);
     if (!tag) throw new HttpException(`Тег с id=${id} не найден`, HttpStatus.NOT_FOUND);

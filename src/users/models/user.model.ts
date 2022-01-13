@@ -14,23 +14,23 @@ export class UserModel {
   @Column({ select: false })
   password: string;
 
-  @ApiProperty({ example: 'Вася', description: 'Имя' })
   @ApiPropertyOptional()
+  @ApiProperty({ example: 'Вася', description: 'Имя' })
   @Column({ nullable: true })
   name?: string;
 
-  @ApiProperty({ example: 'Пупкин2', description: 'Фамилия' })
   @ApiPropertyOptional()
+  @ApiProperty({ example: 'Пупкин2', description: 'Фамилия' })
   @Column({ nullable: true })
   surname?: string;
 
-  @ApiProperty({ example: '9648889900', description: 'Мобильный телефон' })
   @ApiPropertyOptional()
+  @ApiProperty({ example: '9648889900', description: 'Мобильный телефон' })
   @Column({ nullable: true })
   phone?: string;
 
-  @ApiProperty({ example: '/path/aaa.jpg', description: 'Фото' })
   @ApiPropertyOptional()
+  @ApiProperty({ example: '/path/aaa.jpg', description: 'Фото' })
   @Column({ nullable: true })
   image?: string;
 }

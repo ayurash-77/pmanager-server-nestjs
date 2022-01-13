@@ -18,20 +18,19 @@ export class CreateUserDto extends UserModel {
   })
   password: string;
 
-  @IsString({ message: `поле 'name' должно быть строкой` })
   @IsOptional()
+  @IsString({ message: `поле 'name' должно быть строкой` })
   name?: string;
 
-  @IsString({ message: `поле 'surname' должно быть строкой` })
   @IsOptional()
+  @IsString({ message: `поле 'surname' должно быть строкой` })
   surname?: string;
 
-  // @IsString()
-  @IsPhoneNumber('RU', { message: `поле 'phone' должно быть из 10-ти значным числом` })
   @IsOptional()
+  @IsPhoneNumber('RU', { message: `поле 'phone' должно быть из 10-ти значным числом` })
   phone?: string;
 
-  @IsString({ message: `поле 'image' должно быть строкой` })
   @IsOptional()
+  @IsString({ message: `поле 'image' должно быть строкой` })
   image?: string;
 }

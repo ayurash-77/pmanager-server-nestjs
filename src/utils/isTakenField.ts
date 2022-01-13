@@ -11,13 +11,10 @@ export const IsTakenField = async (
   id?: number,
 ): Promise<boolean> => {
   const candidate = await repo.findOne({ [key]: dto[key] });
-  console.log(candidate);
+
   if (candidate && candidate.id == id) return false;
   if (candidate) {
-    throw new HttpException(
-      `${name} с полем ${key}: '${dto[key]}' уже существует`,
-      HttpStatus.UNPROCESSABLE_ENTITY,
-    );
+    throw new HttpException(`${name} ${key}: '${dto[key]}' уже существует`, HttpStatus.UNPROCESSABLE_ENTITY);
   }
   return false;
 };

@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from '@app/users/users.module';
 import config from '@app/ormconfig';
 import { AuthMiddleware } from '@app/users/middlewares/auth.middleware';
+import { JobsModule } from './jobs/jobs.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { AuthMiddleware } from '@app/users/middlewares/auth.middleware';
     TypeOrmModule.forRoot(config),
     TagsModule,
     UsersModule,
+    JobsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
