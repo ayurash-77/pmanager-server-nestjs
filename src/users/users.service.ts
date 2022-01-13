@@ -40,14 +40,12 @@ export class UsersService {
   }
 
   async login(userLoginDto: LoginUserDto): Promise<User> {
-    const user = await this.repo.findOne(
-      { email: userLoginDto.email },
-      {
-        select: ['id', 'email', 'password', 'username', 'name', 'surname', 'phone', 'image'],
-      },
-    );
+    const user = await this.repo.findOne({
+      where: [{ email: userLoginDto.username }, { username: userLoginDto.username }],
+      select: ['id', 'email', 'password', 'username', 'name', 'surname', 'phone', 'image'],
+    });
     if (!user) {
-      throw new UnprocessableEntityException(`Пользователь с email '${userLoginDto.email}' не найден`);
+      throw new UnprocessableEntityException(`Пользователь '${userLoginDto.username}' не найден`);
     }
     const isPasswordCorrect = await compare(userLoginDto.password, user.password);
     if (!isPasswordCorrect) {
