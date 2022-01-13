@@ -33,9 +33,9 @@ export class UsersController {
 
   // Получить текущего пользователя
   @Get('user')
-  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Получить текущего пользователя' })
   @ApiResponse({ status: 200, type: User })
+  @UseGuards(AuthGuard)
   async currentUser(@UserDecorator() user: User): Promise<UserResponseInterface> {
     return this.usersService.buildUserResponse(user);
   }
@@ -52,6 +52,7 @@ export class UsersController {
   @Get('users/:id')
   @ApiOperation({ summary: 'Получить пользователя по ID' })
   @ApiResponse({ status: 200, type: User })
+  @UseGuards(AuthGuard)
   async getById(@Param('id') id: string): Promise<UserResponseInterface> {
     const user = await this.usersService.getById(+id);
     return this.usersService.buildUserResponse(user);
@@ -59,9 +60,9 @@ export class UsersController {
 
   // Изменить пользователя по ID
   @Patch('users/:id')
-  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Изменить пользователя по ID' })
   @ApiResponse({ status: 200, type: User })
+  @UseGuards(AuthGuard)
   async updateById(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
@@ -72,9 +73,9 @@ export class UsersController {
 
   // Изменить текущего пользователя
   @Patch('user')
-  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Изменить текущего пользователя' })
   @ApiResponse({ status: 200, type: User })
+  @UseGuards(AuthGuard)
   async updateCurrent(
     @UserDecorator() user: User,
     @Body() updateUserDto: UpdateUserDto,

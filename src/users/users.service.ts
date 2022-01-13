@@ -14,6 +14,7 @@ import { sign } from 'jsonwebtoken';
 import { UserResponseInterface } from './types/userResponse.interface';
 import { LoginUserDto } from './dto/login-user.dto';
 import { hash, compare } from 'bcrypt';
+import { IsTakenField } from '@app/utils/isTakenField';
 
 @Injectable()
 export class UsersService {
@@ -61,8 +62,8 @@ export class UsersService {
 
   // Регистрация нового пользователя
   async create(createUserDto: CreateUserDto): Promise<User> {
-    await this.isTaken('username', createUserDto.username);
-    await this.isTaken('email', createUserDto.email);
+    await IsTakenField(this.repo, 'username', createUserDto, User.name);
+    await IsTakenField(this.repo, 'email', createUserDto, User.name);
     const user = new User();
     Object.assign(user, createUserDto);
     user.password = await this.hashPassword(createUserDto.password);
@@ -80,25 +81,13 @@ export class UsersService {
     return user;
   }
 
-  async isTaken(key: string, value: string, id?: number): Promise<boolean> {
-    const user = await this.repo.findOne({ [key]: value });
-
-    if (user && user.id == id) return;
-    if (user) {
-      throw new HttpException(
-        `Пользователь с ${key} '${value}' уже существует`,
-        HttpStatus.UNPROCESSABLE_ENTITY,
-      );
-    }
-    return false;
-  }
-
   // Изменить пользователя по ID
   async updateById(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.getById(id);
 
-    await this.isTaken('username', updateUserDto.username, id);
-    await this.isTaken('email', updateUserDto.email, id);
+    await IsTakenField(this.repo, 'username', updateUserDto, User.name, id);
+    await IsTakenField(this.repo, 'email', updateUserDto, User.name, id);
+
     Object.assign(user, updateUserDto);
     if (user.password) user.password = await hash(updateUserDto.password, 5);
     return this.repo.save(user);

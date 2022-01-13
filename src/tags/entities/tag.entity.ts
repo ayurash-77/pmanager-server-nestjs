@@ -1,28 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, AfterInsert, AfterUpdate, AfterRemove } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { TagModel } from '@app/tags/models/tag.model';
 
 @Entity({ name: 'tags' })
-export class Tag {
+export class Tag extends TagModel {
   @ApiProperty({ example: 1, description: 'Уникальный ID' })
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ApiProperty({ example: 'Overview', description: 'Имя тега' })
   @Column({ unique: true })
   name: string;
-
-  @AfterInsert()
-  logInsert() {
-    console.log(`Добавлен тег "${this.name}"`);
-  }
-
-  @AfterUpdate()
-  logUpdate() {
-    console.log(`Обновлен тег "${this.name}"`);
-  }
-
-  @AfterRemove()
-  logRemove() {
-    console.log(`Удален тег "${this.name}"`);
-  }
 }

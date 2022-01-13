@@ -1,20 +1,18 @@
-import { BadRequestException, NotFoundException, Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { UpdateTagDto } from './dto/update-tag.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Tag } from './entities/tag.entity';
 import { Repository } from 'typeorm';
+import { IsTakenField } from '@app/utils/isTakenField';
 
 @Injectable()
 export class TagsService {
-  constructor(@InjectRepository(Tag) private repo: Repository<Tag>) {}
+  constructor(@InjectRepository(Tag) public repo: Repository<Tag>) {}
 
   async create(createTagDto: CreateTagDto): Promise<Tag> {
-    const name = createTagDto.name;
+    await IsTakenField(this.repo, 'name', createTagDto, Tag.name);
 
-    if (await this.repo.findOne({ name })) {
-      throw new BadRequestException(`Тег ${createTagDto.name} уже существует`);
-    }
     const tag = this.repo.create(createTagDto);
     return await this.repo.save(tag);
   }
@@ -26,25 +24,22 @@ export class TagsService {
   async findById(id: number): Promise<Tag | null> {
     const tag = await this.repo.findOne(id);
     if (!tag) {
-      throw new NotFoundException(`Тег с ID=${id} не найден`);
+      throw new HttpException(`Тег с id=${id} не найден`, HttpStatus.NOT_FOUND);
     }
     return tag;
   }
 
   async update(id: number, updateTagDto: UpdateTagDto): Promise<Tag> {
-    const tag = await this.repo.findOne(id);
-    if (!tag) {
-      throw new NotFoundException(`Тег с ID=${id} не найден`);
-    }
+    const tag = await this.findById(id);
+
+    await IsTakenField(this.repo, 'name', updateTagDto, Tag.name, id);
+
     Object.assign(tag, updateTagDto);
     return this.repo.save(tag);
   }
 
   async remove(id: number): Promise<Tag> {
-    const tag = await this.repo.findOne(id);
-    if (!tag) {
-      throw new NotFoundException(`Тег с ID=${id} не найден`);
-    }
+    const tag = await this.findById(id);
     return this.repo.remove(tag);
   }
 }
