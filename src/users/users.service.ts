@@ -1,10 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -95,8 +89,7 @@ export class UsersService {
 
   // Удалить пользователя по ID
   async remove(id: number): Promise<User> {
-    const user = await this.repo.findOne(id);
-    if (!user) throw new NotFoundException(`Пользователь с ID=${id} не найден`);
+    const user = await this.getById(id);
     return this.repo.remove(user);
   }
 }

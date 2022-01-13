@@ -10,6 +10,7 @@ import { Tag } from './entities/tag.entity';
 export class TagsController {
   constructor(private readonly tagsService: TagsService) {}
 
+  // Создать новый тег
   @Post()
   @ApiOperation({ summary: 'Создать новый тег' })
   @ApiResponse({ status: 200, type: Tag })
@@ -17,20 +18,23 @@ export class TagsController {
     return this.tagsService.create(createTagDto);
   }
 
+  // Получить все теги
   @Get()
   @ApiOperation({ summary: 'Получить все теги' })
   @ApiResponse({ status: 200, type: [Tag] })
   findAll() {
-    return this.tagsService.findAll();
+    return this.tagsService.getAll();
   }
 
+  // Получить тег по ID
   @Get(':id')
   @ApiOperation({ summary: 'Получить тег по ID' })
   @ApiResponse({ status: 200, type: Tag })
   findById(@Param('id') id: string) {
-    return this.tagsService.findById(+id);
+    return this.tagsService.getById(+id);
   }
 
+  // Изменить тег по ID
   @Patch(':id')
   @ApiOperation({ summary: 'Изменить тег по ID' })
   @ApiResponse({ status: 200, type: Tag })
@@ -38,6 +42,7 @@ export class TagsController {
     return this.tagsService.update(+id, updateTagDto);
   }
 
+  // Удалить тег по ID
   @Delete(':id')
   @ApiOperation({ summary: 'Удалить тег по ID' })
   @ApiResponse({ status: 200, type: Tag })
