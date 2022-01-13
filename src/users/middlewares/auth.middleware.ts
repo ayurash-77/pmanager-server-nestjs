@@ -6,7 +6,6 @@ import { UsersService } from '@app/users/users.service';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-
   constructor(private readonly usersService: UsersService) {}
 
   async use(req: ExpressRequestInterface, res: Response, next: NextFunction) {
@@ -20,7 +19,7 @@ export class AuthMiddleware implements NestMiddleware {
 
     try {
       const decoded = verify(token, process.env.JWT_SECRET) as JwtPayload;
-      req.user = await this.usersService.findById(decoded.id);
+      req.user = await this.usersService.getById(decoded.id);
       next();
     } catch (err) {
       req.user = null;

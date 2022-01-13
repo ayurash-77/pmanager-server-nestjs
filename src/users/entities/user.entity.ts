@@ -1,6 +1,5 @@
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { hash } from 'bcrypt';
 import { UserModel } from '@app/users/models/user.model';
 
 @Entity({ name: 'users' })
@@ -33,10 +32,4 @@ export class User extends UserModel {
   @ApiPropertyOptional()
   @Column({ nullable: true })
   image?: string;
-
-  @BeforeInsert()
-  //@BeforeUpdate()
-  async hashPassword() {
-    this.password = await hash(this.password, 5);
-  }
 }

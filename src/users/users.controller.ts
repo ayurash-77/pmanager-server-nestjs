@@ -15,7 +15,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   // Регистрация нового пользователя
-  @Post('users')
+  @Post('users/register')
   @ApiOperation({ summary: 'Регистрация нового пользователя' })
   @ApiResponse({ status: 200, type: User })
   async create(@Body() createUserDto: CreateUserDto): Promise<UserResponseInterface> {
@@ -44,16 +44,16 @@ export class UsersController {
   @Get('users')
   @ApiOperation({ summary: 'Получить всех пользователей' })
   @ApiResponse({ status: 200, type: [User] })
-  findAll() {
-    return this.usersService.findAll();
+  getAll() {
+    return this.usersService.getAll();
   }
 
   // Получить пользователя по ID
   @Get('users/:id')
   @ApiOperation({ summary: 'Получить пользователя по ID' })
   @ApiResponse({ status: 200, type: User })
-  async findById(@Param('id') id: string): Promise<UserResponseInterface> {
-    const user = await this.usersService.findById(+id);
+  async getById(@Param('id') id: string): Promise<UserResponseInterface> {
+    const user = await this.usersService.getById(+id);
     return this.usersService.buildUserResponse(user);
   }
 
