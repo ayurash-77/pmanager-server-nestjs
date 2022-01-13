@@ -1,32 +1,37 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsPhoneNumber, IsString, Length } from 'class-validator';
 import { UserModel } from '@app/users/models/user.model';
+import { PASSWORD_MAX, PASSWORD_MIN } from '@app/users/users.costants';
 
 export class CreateUserDto extends UserModel {
-  @IsNotEmpty()
-  @IsString()
+  @IsNotEmpty({ message: `поле 'username' не может быть пустым` })
+  @IsString({ message: `поле 'username' должно быть строкой` })
   username: string;
 
-  @IsNotEmpty()
-  @IsEmail()
+  @IsNotEmpty({ message: `поле 'email' не может быть пустым` })
+  @IsEmail({ message: `поле 'email' в некорректном формате` })
   email: string;
 
-  @IsNotEmpty()
-  @IsString()
+  @IsNotEmpty({ message: `поле 'password' не может быть пустым` })
+  @IsString({ message: `поле 'password' должно быть строкой` })
+  @Length(PASSWORD_MIN, PASSWORD_MAX, {
+    message: `поле 'password' должно быть от ${PASSWORD_MIN} до ${PASSWORD_MAX} символов`,
+  })
   password: string;
 
-  @IsString()
+  @IsString({ message: `поле 'name' должно быть строкой` })
   @IsOptional()
   name?: string;
 
-  @IsString()
+  @IsString({ message: `поле 'surname' должно быть строкой` })
   @IsOptional()
   surname?: string;
 
-  @IsString()
+  // @IsString()
+  @IsPhoneNumber('RU', { message: `поле 'phone' должно быть из 10-ти значным числом` })
   @IsOptional()
   phone?: string;
 
-  @IsString()
+  @IsString({ message: `поле 'image' должно быть строкой` })
   @IsOptional()
   image?: string;
 }

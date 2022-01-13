@@ -80,8 +80,11 @@ export class UsersService {
     return user;
   }
 
-  async isTaken(key: string, value: string): Promise<boolean> {
-    if (await this.repo.findOne({ [key]: value })) {
+  async isTaken(key: string, value: string, id?: number): Promise<boolean> {
+    const user = await this.repo.findOne({ [key]: value });
+
+    if (user && user.id == id) return;
+    if (user) {
       throw new HttpException(
         `Пользователь с ${key} '${value}' уже существует`,
         HttpStatus.UNPROCESSABLE_ENTITY,
@@ -94,8 +97,8 @@ export class UsersService {
   async updateById(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.getById(id);
 
-    await this.isTaken('username', updateUserDto.username);
-    await this.isTaken('email', updateUserDto.email);
+    await this.isTaken('username', updateUserDto.username, id);
+    await this.isTaken('email', updateUserDto.email, id);
     Object.assign(user, updateUserDto);
     if (user.password) user.password = await hash(updateUserDto.password, 5);
     return this.repo.save(user);
