@@ -37,4 +37,5 @@ lerna-debug.log*
 .env-dev.env
 .env-prod.env
 .env
+
 /src/seeds/
