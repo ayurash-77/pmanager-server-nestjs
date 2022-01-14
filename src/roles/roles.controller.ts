@@ -56,4 +56,10 @@ export class RolesController {
   addJob(@Body() dto: AddJobDto) {
     return this.rolesService.addJob(dto);
   }
+
+  // Удалить тип работ
+  @Post('roles/remove-job')
+  removeJob(@Body() dto: AddJobDto) {
+    return this.rolesService.removeJob(dto);
+  }
 }

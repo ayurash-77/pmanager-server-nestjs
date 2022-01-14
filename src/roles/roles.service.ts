@@ -57,9 +57,18 @@ export class RolesService {
     const isNotExists = role.jobs.findIndex(jobInRole => jobInRole.id === job.id) === -1;
     if (isNotExists) {
       role.jobs.push(job);
-      console.log(role);
       await this.rolesRepo.save(role);
-      console.log(role);
+    }
+    return role;
+  }
+
+  // Удалить тип работ
+  async removeJob(dto: AddJobDto) {
+    const role = await this.getById(dto.roleId);
+    const jobInRoleId = role.jobs.findIndex(jobInRole => jobInRole.id === dto.jobId);
+    if (jobInRoleId !== -1) {
+      role.jobs.splice(jobInRoleId, 1);
+      await this.rolesRepo.save(role);
     }
     return role;
   }
