@@ -5,26 +5,31 @@ import { Role } from '@app/roles/entities/role.entity';
 import { CreateRoleDto } from '@app/roles/dto/create-role.dto';
 import { UpdateRoleDto } from '@app/roles/dto/update-role.dto';
 import { IsTakenField } from '@app/utils/isTakenField';
+import { AddJobDto } from '@app/roles/dto/add-job.dto';
+import { Job } from '@app/jobs/entities/job.entity';
 
 @Injectable()
 export class RolesService {
-  constructor(@InjectRepository(Role) public repo: Repository<Role>) {}
+  constructor(
+    @InjectRepository(Role) public rolesRepo: Repository<Role>,
+    @InjectRepository(Job) public jobsRepo: Repository<Role>,
+  ) {}
 
   // Создать новую роль
   async create(createRoleDto: CreateRoleDto): Promise<Role> {
-    await IsTakenField(this.repo, 'name', createRoleDto, Role.name);
-    const role = this.repo.create(createRoleDto);
-    return await this.repo.save(role);
+    await IsTakenField(this.rolesRepo, 'name', createRoleDto, Role.name);
+    const role = this.rolesRepo.create(createRoleDto);
+    return await this.rolesRepo.save(role);
   }
 
   // Получить все роли
   async getAll(): Promise<Role[]> {
-    return await this.repo.find();
+    return await this.rolesRepo.find({ relations: ['jobs'] });
   }
 
   // Получить роль по ID
   async getById(id: number): Promise<Role | null> {
-    const role = await this.repo.findOne(id);
+    const role = await this.rolesRepo.findOne(id, { relations: ['jobs'] });
     if (!role) throw new HttpException(`Роль с id=${id} не найдена`, HttpStatus.NOT_FOUND);
     return role;
   }
@@ -32,14 +37,30 @@ export class RolesService {
   // Изменить роль по ID
   async update(id: number, updateRoleDto: UpdateRoleDto): Promise<Role> {
     const role = await this.getById(id);
-    await IsTakenField(this.repo, 'name', updateRoleDto, Role.name, id);
+    await IsTakenField(this.rolesRepo, 'name', updateRoleDto, Role.name, id);
     Object.assign(role, updateRoleDto);
-    return this.repo.save(role);
+    return this.rolesRepo.save(role);
   }
 
   // Удалить роль по ID
   async remove(id: number): Promise<Role> {
     const role = await this.getById(id);
-    return this.repo.remove(role);
+    return this.rolesRepo.remove(role);
+  }
+
+  // Добавить тип рработ
+  async addJob(dto: AddJobDto) {
+    const role = await this.getById(dto.roleId);
+    const job = await this.jobsRepo.findOne(dto.jobId);
+    if (!job) throw new HttpException('Тип работ с id=${id} не найден', HttpStatus.NOT_FOUND);
+
+    const isNotExists = role.jobs.findIndex(jobInRole => jobInRole.id === job.id) === -1;
+    if (isNotExists) {
+      role.jobs.push(job);
+      console.log(role);
+      await this.rolesRepo.save(role);
+      console.log(role);
+    }
+    return role;
   }
 }

@@ -18,7 +18,7 @@ export class SeedRoles1642144929412 implements MigrationInterface {
                                     ('3d modeler', '3d Моделер'),
                                     ('CG generalist', 'CG Generalist'),
                                     ('Sound producer', 'Звукорежиссер'),
-                                    ('Guest', 'Гость')
+                                    ('Guest', 'Гостьg')
     `);
   }
 

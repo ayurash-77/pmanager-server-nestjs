@@ -4,14 +4,15 @@ import { RolesService } from './roles.service';
 import { Role } from './entities/role.entity';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
+import { AddJobDto } from '@app/roles/dto/add-job.dto';
 
 @ApiTags('Роли')
-@Controller('api/roles')
+@Controller('api')
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
   // Создать новую роль
-  @Post()
+  @Post('roles')
   @ApiOperation({ summary: 'Создать новую роль' })
   @ApiResponse({ status: 200, type: Role })
   create(@Body() createRoleDto: CreateRoleDto): Promise<Role> {
@@ -19,7 +20,7 @@ export class RolesController {
   }
 
   // Получить все роли
-  @Get()
+  @Get('roles')
   @ApiOperation({ summary: 'Получить все роли' })
   @ApiResponse({ status: 200, type: [Role] })
   getAll() {
@@ -27,7 +28,7 @@ export class RolesController {
   }
 
   // Получить роль по ID
-  @Get(':id')
+  @Get('roles/:id')
   @ApiOperation({ summary: 'Получить роль по ID' })
   @ApiResponse({ status: 200, type: Role })
   getById(@Param('id') id: string) {
@@ -35,7 +36,7 @@ export class RolesController {
   }
 
   // Изменить роль по ID
-  @Patch(':id')
+  @Patch('roles/:id')
   @ApiOperation({ summary: 'Изменить роль по ID' })
   @ApiResponse({ status: 200, type: Role })
   update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
@@ -43,10 +44,16 @@ export class RolesController {
   }
 
   // Удалить роль по ID
-  @Delete(':id')
+  @Delete('roles/:id')
   @ApiOperation({ summary: 'Удалить роль по ID' })
   @ApiResponse({ status: 200, type: Role })
   remove(@Param('id') id: string) {
     return this.rolesService.remove(+id);
+  }
+
+  // Добавить тип работ
+  @Post('roles/add-job')
+  addJob(@Body() dto: AddJobDto) {
+    return this.rolesService.addJob(dto);
   }
 }

@@ -2,7 +2,7 @@ import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { RoleModel } from '@app/roles/models/role.model';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Job } from '@app/jobs/entities/job.entity';
-import { JoinTable } from 'typeorm/browser';
+import { JoinTable } from 'typeorm';
 
 @Entity({ name: 'roles' })
 export class Role extends RoleModel {
@@ -17,8 +17,9 @@ export class Role extends RoleModel {
   @Column({ nullable: true })
   details?: string;
 
+  // @ManyToMany(() => Job, job => job.roles)
   @ManyToMany(() => Job)
   // @JoinTable({ name: 'roles_jobs', joinColumn: { name: 'roleId' }, inverseJoinColumn: { name: 'jobId' } })
-  @JoinTable()
+  @JoinTable({ name: 'roles_jobs' })
   jobs: Job[];
 }
