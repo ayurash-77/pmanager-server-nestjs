@@ -22,7 +22,7 @@ export class TagsController {
   @Get()
   @ApiOperation({ summary: 'Получить все теги' })
   @ApiResponse({ status: 200, type: [Tag] })
-  findAll() {
+  findAll(): Promise<Tag[]> {
     return this.tagsService.getAll();
   }
 
@@ -30,7 +30,7 @@ export class TagsController {
   @Get(':id')
   @ApiOperation({ summary: 'Получить тег по ID' })
   @ApiResponse({ status: 200, type: Tag })
-  findById(@Param('id') id: string) {
+  findById(@Param('id') id: string): Promise<Tag> {
     return this.tagsService.getById(+id);
   }
 
@@ -38,7 +38,7 @@ export class TagsController {
   @Patch(':id')
   @ApiOperation({ summary: 'Изменить тег по ID' })
   @ApiResponse({ status: 200, type: Tag })
-  update(@Param('id') id: string, @Body() updateTagDto: UpdateTagDto) {
+  update(@Param('id') id: string, @Body() updateTagDto: UpdateTagDto): Promise<Tag> {
     return this.tagsService.update(+id, updateTagDto);
   }
 
@@ -46,7 +46,7 @@ export class TagsController {
   @Delete(':id')
   @ApiOperation({ summary: 'Удалить тег по ID' })
   @ApiResponse({ status: 200, type: Tag })
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: string): Promise<Tag> {
     return this.tagsService.remove(+id);
   }
 }

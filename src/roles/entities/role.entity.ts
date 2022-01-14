@@ -17,7 +17,7 @@ export class Role extends RoleModel {
   @Column({ nullable: true })
   details?: string;
 
-  @ManyToMany(() => Job)
+  @ManyToMany(() => Job, { eager: true })
   @JoinTable({ name: 'roles_jobs' })
   jobs: Job[];
 }

@@ -24,12 +24,12 @@ export class RolesService {
 
   // Получить все роли
   async getAll(): Promise<Role[]> {
-    return await this.rolesRepo.find({ relations: ['jobs'] });
+    return await this.rolesRepo.find();
   }
 
   // Получить роль по ID
   async getById(id: number): Promise<Role | null> {
-    const role = await this.rolesRepo.findOne(id, { relations: ['jobs'] });
+    const role = await this.rolesRepo.findOne(id);
     if (!role) throw new HttpException(`Роль с id=${id} не найдена`, HttpStatus.NOT_FOUND);
     return role;
   }
