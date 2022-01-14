@@ -24,9 +24,8 @@ export class SeedJobs1642144929412 implements MigrationInterface {
                                     ('Project Management', 'Ведение проекта'),
                                     ('Creative', 'Креатив'),
                                     ('Sound Design', 'Sound Design')
-                                    `);
+    `);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   async down(): Promise<any> {}
 }

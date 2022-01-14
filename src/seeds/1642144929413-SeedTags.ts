@@ -13,6 +13,5 @@ export class SeedTags1642144929412 implements MigrationInterface {
     `);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   async down(): Promise<any> {}
 }
