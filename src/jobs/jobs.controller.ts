@@ -22,7 +22,7 @@ export class JobsController {
   @Get()
   @ApiOperation({ summary: 'Получить все тип работи' })
   @ApiResponse({ status: 200, type: [Job] })
-  findAll() {
+  getAll() {
     return this.jobsService.getAll();
   }
 
@@ -30,7 +30,7 @@ export class JobsController {
   @Get(':id')
   @ApiOperation({ summary: 'Получить тип работ по ID' })
   @ApiResponse({ status: 200, type: Job })
-  findById(@Param('id') id: string) {
+  getById(@Param('id') id: string) {
     return this.jobsService.getById(+id);
   }
 

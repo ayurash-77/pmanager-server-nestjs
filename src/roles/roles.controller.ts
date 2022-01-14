@@ -22,7 +22,7 @@ export class RolesController {
   @Get()
   @ApiOperation({ summary: 'Получить все роли' })
   @ApiResponse({ status: 200, type: [Role] })
-  findAll() {
+  getAll() {
     return this.rolesService.getAll();
   }
 
@@ -30,7 +30,7 @@ export class RolesController {
   @Get(':id')
   @ApiOperation({ summary: 'Получить роль по ID' })
   @ApiResponse({ status: 200, type: Role })
-  findById(@Param('id') id: string) {
+  getById(@Param('id') id: string) {
     return this.rolesService.getById(+id);
   }
 
