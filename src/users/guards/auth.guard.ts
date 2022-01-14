@@ -9,6 +9,6 @@ export class AuthGuard implements CanActivate {
     if (request.user) {
       return true;
     }
-    throw new UnauthorizedException('Not authorized');
+    throw new UnauthorizedException('Необходимо авторизоваться');
   }
 }

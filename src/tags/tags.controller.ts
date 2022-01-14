@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { TagsService } from './tags.service';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { UpdateTagDto } from './dto/update-tag.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Tag } from './entities/tag.entity';
+import { AuthGuard } from '@app/users/guards/auth.guard';
 
 @ApiTags('Теги')
 @Controller('api/tags')
@@ -46,6 +47,7 @@ export class TagsController {
   @Delete(':id')
   @ApiOperation({ summary: 'Удалить тег по ID' })
   @ApiResponse({ status: 200, type: Tag })
+  @UseGuards(AuthGuard)
   remove(@Param('id') id: string): Promise<Tag> {
     return this.tagsService.remove(+id);
   }

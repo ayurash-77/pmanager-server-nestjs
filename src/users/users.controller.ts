@@ -8,6 +8,8 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { UserDecorator } from '@app/users/decorators/user.decorator';
 import { User } from '@app/users/entities/user.entity';
 import { AuthGuard } from '@app/users/guards/auth.guard';
+import { RolesGuard } from '@app/roles/guards/roles.guard';
+import { RoleDecorator } from '@app/roles/decorators/role.decorator';
 
 @ApiTags('Пользователи')
 @Controller('api')
@@ -53,6 +55,8 @@ export class UsersController {
   @ApiOperation({ summary: 'Получить пользователя по ID' })
   @ApiResponse({ status: 200, type: User })
   @UseGuards(AuthGuard)
+  @RoleDecorator('Admin')
+  @UseGuards(RolesGuard)
   async getById(@Param('id') id: string): Promise<UserResponseInterface> {
     const user = await this.usersService.getById(+id);
     return this.usersService.buildUserResponse(user);
@@ -88,6 +92,7 @@ export class UsersController {
   @Delete('users/:id')
   @ApiOperation({ summary: 'Удалить пользователя по ID' })
   @ApiResponse({ status: 200, type: User })
+  @UseGuards(AuthGuard)
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
   }
