@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { UserModel } from '@app/users/models/user.model';
+import { Role } from '@app/roles/entities/role.entity';
 
 @Entity({ name: 'users' })
 export class User extends UserModel {
@@ -32,4 +33,8 @@ export class User extends UserModel {
   @ApiPropertyOptional()
   @Column({ nullable: true })
   image?: string;
+
+  @ManyToMany(() => Role, { eager: true })
+  @JoinTable({ name: 'users_roles' })
+  roles: Role[];
 }

@@ -20,6 +20,7 @@ export class UsersService {
         id: user.id,
         username: user.username,
         email: user.email,
+        roles: user.roles,
       },
       process.env.JWT_SECRET,
     );
