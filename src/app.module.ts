@@ -14,10 +14,10 @@ import { RolesModule } from './roles/roles.module';
   imports: [
     ConfigModule.forRoot({ envFilePath: '.env' }),
     TypeOrmModule.forRoot(config),
-    TagsModule,
     UsersModule,
-    JobsModule,
     RolesModule,
+    JobsModule,
+    TagsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
