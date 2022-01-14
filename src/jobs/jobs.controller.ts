@@ -1,9 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
-import { JobsService } from './jobs.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Job } from '@app/jobs/entities/job.entity';
-import { CreateJobDto } from '@app/jobs/dto/create-job.dto';
-import { UpdateJobDto } from '@app/jobs/dto/update-job.dto';
+import { JobsService } from './jobs.service';
+import { Job } from './entities/job.entity';
+import { CreateJobDto } from './dto/create-job.dto';
+import { UpdateJobDto } from './dto/update-job.dto';
 
 @ApiTags('Типы работ')
 @Controller('api/jobs')
