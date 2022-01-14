@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Job } from '@app/jobs/entities/job.entity';
 import { CreateJobDto } from '@app/jobs/dto/create-job.dto';
-import { IsTakenField } from '@app/utils/isTakenField';
 import { UpdateJobDto } from '@app/jobs/dto/update-job.dto';
+import { IsTakenField } from '@app/utils/isTakenField';
 
 @Injectable()
 export class JobsService {

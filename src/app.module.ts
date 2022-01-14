@@ -8,6 +8,7 @@ import { UsersModule } from '@app/users/users.module';
 import config from '@app/ormconfig';
 import { AuthMiddleware } from '@app/users/middlewares/auth.middleware';
 import { JobsModule } from './jobs/jobs.module';
+import { RolesModule } from './roles/roles.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { JobsModule } from './jobs/jobs.module';
     TagsModule,
     UsersModule,
     JobsModule,
+    RolesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
