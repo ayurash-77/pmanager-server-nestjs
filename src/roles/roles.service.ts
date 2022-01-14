@@ -49,7 +49,7 @@ export class RolesService {
   }
 
   // Добавить тип рработ
-  async addJob(dto: AddJobDto) {
+  async addJob(dto: AddJobDto): Promise<Role> {
     const role = await this.getById(dto.roleId);
     const job = await this.jobsRepo.findOne(dto.jobId);
     if (!job) throw new HttpException('Тип работ с id=${id} не найден', HttpStatus.NOT_FOUND);
@@ -63,7 +63,7 @@ export class RolesService {
   }
 
   // Удалить тип работ
-  async removeJob(dto: AddJobDto) {
+  async removeJob(dto: AddJobDto): Promise<Role> {
     const role = await this.getById(dto.roleId);
     const jobInRoleId = role.jobs.findIndex(jobInRole => jobInRole.id === dto.jobId);
     if (jobInRoleId !== -1) {

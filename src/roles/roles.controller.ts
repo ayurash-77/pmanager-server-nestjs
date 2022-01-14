@@ -23,7 +23,7 @@ export class RolesController {
   @Get('roles')
   @ApiOperation({ summary: 'Получить все роли' })
   @ApiResponse({ status: 200, type: [Role] })
-  getAll() {
+  getAll(): Promise<Role[]> {
     return this.rolesService.getAll();
   }
 
@@ -31,7 +31,7 @@ export class RolesController {
   @Get('roles/:id')
   @ApiOperation({ summary: 'Получить роль по ID' })
   @ApiResponse({ status: 200, type: Role })
-  getById(@Param('id') id: string) {
+  getById(@Param('id') id: string): Promise<Role> {
     return this.rolesService.getById(+id);
   }
 
@@ -39,7 +39,7 @@ export class RolesController {
   @Patch('roles/:id')
   @ApiOperation({ summary: 'Изменить роль по ID' })
   @ApiResponse({ status: 200, type: Role })
-  update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
+  update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto): Promise<Role> {
     return this.rolesService.update(+id, updateRoleDto);
   }
 
@@ -47,19 +47,19 @@ export class RolesController {
   @Delete('roles/:id')
   @ApiOperation({ summary: 'Удалить роль по ID' })
   @ApiResponse({ status: 200, type: Role })
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: string): Promise<Role> {
     return this.rolesService.remove(+id);
   }
 
   // Добавить тип работ
   @Post('roles/add-job')
-  addJob(@Body() dto: AddJobDto) {
+  addJob(@Body() dto: AddJobDto): Promise<Role> {
     return this.rolesService.addJob(dto);
   }
 
   // Удалить тип работ
   @Post('roles/remove-job')
-  removeJob(@Body() dto: AddJobDto) {
+  removeJob(@Body() dto: AddJobDto): Promise<Role> {
     return this.rolesService.removeJob(dto);
   }
 }
