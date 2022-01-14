@@ -1,7 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { JobModel } from '@app/jobs/models/job.model';
-import { Role } from '@app/roles/entities/role.entity';
 
 @Entity({ name: 'jobs' })
 export class Job extends JobModel {
@@ -15,9 +14,4 @@ export class Job extends JobModel {
   @ApiPropertyOptional()
   @Column({ nullable: true })
   details?: string;
-
-  // @ManyToMany(() => Role, role => role.jobs)
-  // roles: Role[];
-
 }
-
