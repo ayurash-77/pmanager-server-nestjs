@@ -65,11 +65,8 @@ export class RolesService {
   // Удалить тип работ
   async removeJob(dto: AddJobDto): Promise<Role> {
     const role = await this.getById(dto.roleId);
-    const jobInRoleId = role.jobs.findIndex(jobInRole => jobInRole.id === dto.jobId);
-    if (jobInRoleId !== -1) {
-      role.jobs.splice(jobInRoleId, 1);
-      await this.rolesRepo.save(role);
-    }
+    role.jobs = role.jobs.filter(jobInRole => jobInRole.id !== dto.jobId);
+    await this.rolesRepo.save(role);
     return role;
   }
 }
