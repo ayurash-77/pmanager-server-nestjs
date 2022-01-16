@@ -1,11 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { BrandsService } from './brands.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Brand } from '@app/brands/entities/brand.entity';
+import { AuthGuard } from '@app/users/guards/auth.guard';
+import { RoleDecorator } from '@app/roles/decorators/role.decorator';
+import { RolesGuard } from '@app/roles/guards/roles.guard';
 
 @ApiTags('Брэнды')
+@UseGuards(AuthGuard)
 @Controller('api/brands')
 export class BrandsController {
   constructor(private readonly brandsService: BrandsService) {}
@@ -14,6 +18,8 @@ export class BrandsController {
   @Post()
   @ApiOperation({ summary: 'Создать новый Брэнд' })
   @ApiResponse({ status: 200, type: Brand })
+  @RoleDecorator('Producer', 'Art director', 'Manager')
+  @UseGuards(RolesGuard)
   create(@Body() createBrandDto: CreateBrandDto): Promise<Brand> {
     return this.brandsService.create(createBrandDto);
   }
@@ -38,6 +44,8 @@ export class BrandsController {
   @Patch(':id')
   @ApiOperation({ summary: 'Изменить Брэнд по ID' })
   @ApiResponse({ status: 200, type: Brand })
+  @RoleDecorator('Producer', 'Art director', 'Manager')
+  @UseGuards(RolesGuard)
   update(@Param('id') id: string, @Body() updateBrandDto: UpdateBrandDto) {
     return this.brandsService.update(+id, updateBrandDto);
   }
@@ -46,6 +54,8 @@ export class BrandsController {
   @Delete(':id')
   @ApiOperation({ summary: 'Удалить Брэнд по ID' })
   @ApiResponse({ status: 200, type: Brand })
+  @RoleDecorator('Producer', 'Art director', 'Manager')
+  @UseGuards(RolesGuard)
   remove(@Param('id') id: string) {
     return this.brandsService.remove(+id);
   }

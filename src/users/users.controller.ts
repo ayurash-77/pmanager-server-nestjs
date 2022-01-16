@@ -9,6 +9,7 @@ import { UserDecorator } from '@app/users/decorators/user.decorator';
 import { User } from '@app/users/entities/user.entity';
 import { AdminGuard } from '@app/users/guards/admin.guard';
 import { AdminUpdateUserDto } from '@app/users/dto/admin-update-user.dto';
+import { AuthGuard } from '@app/users/guards/auth.guard';
 
 @ApiTags('Пользователи')
 @Controller('api')
@@ -37,6 +38,7 @@ export class UsersController {
   @Get('user')
   @ApiOperation({ summary: 'Получить текущего пользователя' })
   @ApiResponse({ status: 200, type: User })
+  @UseGuards(AuthGuard)
   async currentUser(@UserDecorator() user: User): Promise<UserResponseInterface> {
     return this.usersService.buildUserResponse(user);
   }
@@ -45,6 +47,7 @@ export class UsersController {
   @Get('users')
   @ApiOperation({ summary: 'Получить всех пользователей' })
   @ApiResponse({ status: 200, type: [User] })
+  @UseGuards(AuthGuard)
   getAll() {
     return this.usersService.getAll();
   }
@@ -53,6 +56,7 @@ export class UsersController {
   @Get('users/:id')
   @ApiOperation({ summary: 'Получить пользователя по ID' })
   @ApiResponse({ status: 200, type: User })
+  @UseGuards(AuthGuard)
   // @RoleDecorator('3d artist')
   // @UseGuards(RolesGuard)
   async getById(@Param('id') id: string): Promise<UserResponseInterface> {
@@ -64,6 +68,7 @@ export class UsersController {
   @Patch('users/:id')
   @ApiOperation({ summary: 'Изменить пользователя по ID' })
   @ApiResponse({ status: 200, type: User })
+  @UseGuards(AuthGuard)
   @UseGuards(AdminGuard)
   async updateById(
     @Param('id') id: string,
@@ -77,6 +82,7 @@ export class UsersController {
   @Patch('user')
   @ApiOperation({ summary: 'Изменить текущего пользователя' })
   @ApiResponse({ status: 200, type: User })
+  @UseGuards(AuthGuard)
   async updateCurrent(
     @UserDecorator() user: User,
     @Body() updateUserDto: UpdateUserDto,
@@ -89,6 +95,7 @@ export class UsersController {
   @Delete('users/:id')
   @ApiOperation({ summary: 'Удалить пользователя по ID' })
   @ApiResponse({ status: 200, type: User })
+  @UseGuards(AuthGuard)
   @UseGuards(AdminGuard)
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
