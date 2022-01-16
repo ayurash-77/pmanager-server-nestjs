@@ -7,9 +7,8 @@ import { UserResponseInterface } from './types/userResponse.interface';
 import { LoginUserDto } from './dto/login-user.dto';
 import { UserDecorator } from '@app/users/decorators/user.decorator';
 import { User } from '@app/users/entities/user.entity';
-import { RolesGuard } from '@app/roles/guards/roles.guard';
-import { RoleDecorator } from '@app/roles/decorators/role.decorator';
 import { AdminGuard } from '@app/users/guards/admin.guard';
+import { AdminUpdateUserDto } from '@app/users/dto/admin-update-user.dto';
 
 @ApiTags('Пользователи')
 @Controller('api')
@@ -54,8 +53,8 @@ export class UsersController {
   @Get('users/:id')
   @ApiOperation({ summary: 'Получить пользователя по ID' })
   @ApiResponse({ status: 200, type: User })
-  @RoleDecorator('3d artist')
-  @UseGuards(AdminGuard, RolesGuard)
+  // @RoleDecorator('3d artist')
+  // @UseGuards(RolesGuard)
   async getById(@Param('id') id: string): Promise<UserResponseInterface> {
     const user = await this.usersService.getById(+id);
     return this.usersService.buildUserResponse(user);
@@ -68,9 +67,9 @@ export class UsersController {
   @UseGuards(AdminGuard)
   async updateById(
     @Param('id') id: string,
-    @Body() updateUserDto: UpdateUserDto,
+    @Body() adminUpdateUserDto: AdminUpdateUserDto,
   ): Promise<UserResponseInterface> {
-    const user = await this.usersService.updateById(+id, updateUserDto);
+    const user = await this.usersService.updateById(+id, adminUpdateUserDto);
     return this.usersService.buildUserResponse(user);
   }
 

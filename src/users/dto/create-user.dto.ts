@@ -18,8 +18,6 @@ export class CreateUserDto extends UserModel {
   })
   password: string;
 
-  // isAdmin: boolean;
-
   @IsOptional()
   @IsString({ message: `поле 'name' должно быть строкой` })
   name?: string;
