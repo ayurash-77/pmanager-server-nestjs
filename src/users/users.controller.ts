@@ -7,7 +7,6 @@ import { UserResponseInterface } from './types/userResponse.interface';
 import { LoginUserDto } from './dto/login-user.dto';
 import { UserDecorator } from '@app/users/decorators/user.decorator';
 import { User } from '@app/users/entities/user.entity';
-import { AuthGuard } from '@app/users/guards/auth.guard';
 import { RolesGuard } from '@app/roles/guards/roles.guard';
 import { RoleDecorator } from '@app/roles/decorators/role.decorator';
 import { AdminGuard } from '@app/users/guards/admin.guard';
@@ -55,8 +54,8 @@ export class UsersController {
   @Get('users/:id')
   @ApiOperation({ summary: 'Получить пользователя по ID' })
   @ApiResponse({ status: 200, type: User })
-  // @RoleDecorator('3d artist')
-  // @UseGuards(RolesGuard)
+  @RoleDecorator('3d artist')
+  @UseGuards(AdminGuard, RolesGuard)
   async getById(@Param('id') id: string): Promise<UserResponseInterface> {
     const user = await this.usersService.getById(+id);
     return this.usersService.buildUserResponse(user);
