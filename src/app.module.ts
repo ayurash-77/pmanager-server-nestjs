@@ -10,6 +10,7 @@ import { AuthMiddleware } from '@app/users/middlewares/auth.middleware';
 import { JobsModule } from './jobs/jobs.module';
 import { RolesModule } from './roles/roles.module';
 import { BrandsModule } from './brands/brands.module';
+import { AgenciesModule } from './agencies/agencies.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { BrandsModule } from './brands/brands.module';
     JobsModule,
     TagsModule,
     BrandsModule,
+    AgenciesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
