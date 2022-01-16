@@ -1,9 +1,10 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class InitializationDB1642336438094 implements MigrationInterface {
-    name = 'InitializationDB1642336438094'
+export class InitializationDB1642339301349 implements MigrationInterface {
+    name = 'InitializationDB1642339301349'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`CREATE TABLE "agencies" ("name" character varying NOT NULL, "altName" character varying, "id" SERIAL NOT NULL, CONSTRAINT "UQ_1ea16c73ecef4bab2f61c31c889" UNIQUE ("name"), CONSTRAINT "UQ_1ea16c73ecef4bab2f61c31c889" UNIQUE ("name"), CONSTRAINT "PK_8ab1f1f53f56c8255b0d7e68b28" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "brands" ("name" character varying NOT NULL, "altName" character varying, "id" SERIAL NOT NULL, CONSTRAINT "UQ_96db6bbbaa6f23cad26871339b6" UNIQUE ("name"), CONSTRAINT "UQ_96db6bbbaa6f23cad26871339b6" UNIQUE ("name"), CONSTRAINT "PK_b0c437120b624da1034a81fc561" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "jobs" ("name" character varying NOT NULL, "details" character varying, "id" SERIAL NOT NULL, CONSTRAINT "UQ_e480da468fa5ef0b9a8f90c438e" UNIQUE ("name"), CONSTRAINT "UQ_e480da468fa5ef0b9a8f90c438e" UNIQUE ("name"), CONSTRAINT "PK_cf0a6c42b72fcc7f7c237def345" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "roles" ("name" character varying NOT NULL, "details" character varying, "id" SERIAL NOT NULL, CONSTRAINT "UQ_648e3f5447f725579d7d4ffdfb7" UNIQUE ("name"), CONSTRAINT "UQ_648e3f5447f725579d7d4ffdfb7" UNIQUE ("name"), CONSTRAINT "PK_c1433d71a4838793a49dcad46ab" PRIMARY KEY ("id"))`);
@@ -37,6 +38,7 @@ export class InitializationDB1642336438094 implements MigrationInterface {
         await queryRunner.query(`DROP TABLE "roles"`);
         await queryRunner.query(`DROP TABLE "jobs"`);
         await queryRunner.query(`DROP TABLE "brands"`);
+        await queryRunner.query(`DROP TABLE "agencies"`);
     }
 
 }
