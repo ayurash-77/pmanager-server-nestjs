@@ -20,6 +20,7 @@ export class UsersService {
         id: user.id,
         username: user.username,
         email: user.email,
+        isAdmin: user.isAdmin,
         roles: user.roles,
       },
       process.env.JWT_SECRET,
@@ -38,7 +39,7 @@ export class UsersService {
   async login(userLoginDto: LoginUserDto): Promise<User> {
     const user = await this.repo.findOne({
       where: [{ email: userLoginDto.username }, { username: userLoginDto.username }],
-      select: ['id', 'email', 'password', 'username', 'name', 'surname', 'phone', 'image'],
+      select: ['id', 'email', 'password', 'isAdmin', 'username', 'name', 'surname', 'phone', 'image'],
     });
     if (!user) {
       throw new UnprocessableEntityException(`Пользователь '${userLoginDto.username}' не найден`);

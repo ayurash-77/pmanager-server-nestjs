@@ -18,6 +18,9 @@ export class User extends UserModel {
   @Column({ select: false })
   password: string;
 
+  @Column({ default: false })
+  isAdmin: boolean;
+
   @ApiPropertyOptional()
   @Column({ nullable: true })
   name?: string;

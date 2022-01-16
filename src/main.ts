@@ -1,3 +1,5 @@
+import { AuthGuard } from '@app/users/guards/auth.guard';
+
 if (process.env.NODE_ENV == 'env-prod') {
   require('module-alias/register');
 }
@@ -27,6 +29,8 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/api/docs', app, document);
+
+  app.useGlobalGuards(new AuthGuard());
   app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(PORT);

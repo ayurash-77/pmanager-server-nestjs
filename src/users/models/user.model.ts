@@ -14,6 +14,10 @@ export class UserModel {
   @Column({ select: false })
   password: string;
 
+  @ApiProperty({ example: 'true', description: 'Является ли пользователь администратором' })
+  @Column({ default: false })
+  isAdmin: boolean;
+
   @ApiPropertyOptional()
   @ApiProperty({ example: 'Вася', description: 'Имя' })
   @Column({ nullable: true })
