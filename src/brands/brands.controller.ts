@@ -2,10 +2,11 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { BrandsService } from './brands.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Brand } from '@app/brands/entities/brand.entity';
 
-@Controller('brands')
+@ApiTags('Брэнды')
+@Controller('api/brands')
 export class BrandsController {
   constructor(private readonly brandsService: BrandsService) {}
 
