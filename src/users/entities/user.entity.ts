@@ -37,7 +37,8 @@ export class User extends UserModel {
   @Column({ nullable: true })
   image?: string;
 
-  @ManyToMany(() => Role, { eager: true })
+  // @ManyToMany(() => Role, { eager: true })
+  @ManyToMany(() => Role)
   @JoinTable({ name: 'users_roles' })
   roles: Role[];
 }

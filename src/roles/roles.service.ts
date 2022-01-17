@@ -29,7 +29,7 @@ export class RolesService {
 
   // Получить роль по ID
   async getById(id: number): Promise<Role | null> {
-    const role = await this.rolesRepo.findOne(id);
+    const role = await this.rolesRepo.findOne(id, { relations: ['jobs'] });
     if (!role) throw new HttpException(`Роль с id=${id} не найдена`, HttpStatus.NOT_FOUND);
     return role;
   }

@@ -1,12 +1,13 @@
 import { UpdateTagDto } from '@app/tags/dto/update-tag.dto';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { Repository } from 'typeorm';
+import { UpdateProjectDto } from '@app/projects/dto/update-project.dto';
 
 // Проверка на совпадающие поля
 export const IsTakenField = async (
   repo: Repository<any>,
   key: string,
-  dto: UpdateTagDto,
+  dto: UpdateTagDto | UpdateProjectDto,
   name: string,
   id?: number,
 ): Promise<boolean> => {

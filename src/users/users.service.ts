@@ -72,7 +72,7 @@ export class UsersService {
   }
 
   async getById(id: number): Promise<User | null> {
-    const user = await this.repo.findOne(id);
+    const user = await this.repo.findOne(id, { relations: ['roles'] });
     if (!user) throw new HttpException(`Пользователь с ID=${id} не найден`, HttpStatus.NOT_FOUND);
     return user;
   }

@@ -11,6 +11,7 @@ import { JobsModule } from './jobs/jobs.module';
 import { RolesModule } from './roles/roles.module';
 import { BrandsModule } from './brands/brands.module';
 import { AgenciesModule } from './agencies/agencies.module';
+import { ProjectsModule } from './projects/projects.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { AgenciesModule } from './agencies/agencies.module';
     TagsModule,
     BrandsModule,
     AgenciesModule,
+    ProjectsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
