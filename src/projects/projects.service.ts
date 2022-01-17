@@ -4,9 +4,9 @@ import { UpdateProjectDto } from './dto/update-project.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Project } from '@app/projects/entities/project.entity';
 import { Repository } from 'typeorm';
-import { IsTakenField } from '@app/utils/isTakenField';
 import { User } from '@app/users/entities/user.entity';
 import { ProjectResponseInterface } from '@app/projects/types/projectResponse.interface';
+import * as moment from 'moment';
 
 @Injectable()
 export class ProjectsService {
@@ -27,12 +27,33 @@ export class ProjectsService {
     };
   }
 
+  setProjectDir(title: string) {
+    const data = moment().format('YYYY.MM.DD');
+    return title.replace(/ /g, '-') + '_' + data;
+  }
+
+  async getHomeDir(dto: UpdateProjectDto, id?: number) {
+    const homeDir = this.setProjectDir(dto.title);
+    const candidate = await this.repo.findOne({ homeDir });
+    const data = homeDir.split('_').pop();
+    if (candidate && candidate.id == id) return homeDir;
+    if (candidate)
+      throw new HttpException(
+        `Проект с названием '${dto.title}' и датой '${data}' уже существует`,
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    return homeDir;
+  }
+
   // Создать новый проект
   async create(user: User, createProjectDto: CreateProjectDto): Promise<Project> {
-    // await IsTakenField(this.repo, 'name', createProjectDto, Project.name);
-    const project = await this.repo.create(createProjectDto);
-    project.owner = user;
-    return await this.repo.save(project);
+    const homeDir = await this.getHomeDir(createProjectDto);
+    if (homeDir) {
+      const project = await this.repo.create(createProjectDto);
+      project.homeDir = homeDir;
+      project.owner = user;
+      return await this.repo.save(project);
+    }
   }
 
   // Получить все проекты
@@ -51,9 +72,13 @@ export class ProjectsService {
   // Изменить проект по ID
   async update(id: number, updateProjectDto: UpdateProjectDto): Promise<Project> {
     const project = await this.getById(id);
-    await IsTakenField(this.repo, 'name', updateProjectDto, Project.name, id);
-    Object.assign(project, updateProjectDto);
-    return this.repo.save(project);
+    const homeDir = await this.getHomeDir(updateProjectDto, id);
+
+    if (homeDir) {
+      Object.assign(project, updateProjectDto);
+      project.homeDir = homeDir;
+      return this.repo.save(project);
+    }
   }
 
   // Удалить проект по ID

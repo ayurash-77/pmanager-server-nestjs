@@ -55,8 +55,9 @@ export class ProjectsController {
   @ApiResponse({ status: 200, type: Project })
   @RoleDecorator('Producer', 'Art director', 'Manager')
   @UseGuards(RolesGuard)
-  update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
-    return this.projectsService.update(+id, updateProjectDto);
+  async update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
+    const project = await this.projectsService.update(+id, updateProjectDto);
+    return this.projectsService.buildProjectResponse(project);
   }
 
   // Удалить проект по ID

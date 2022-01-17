@@ -1,6 +1,5 @@
-import { BeforeInsert, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import * as moment from 'moment';
 
 export class ProjectModel {
   @ApiProperty({ example: 'Tele2-Market', description: 'Название проекта' })
@@ -41,9 +40,9 @@ export class ProjectModel {
   @Column({ nullable: true })
   details?: string;
 
-  @BeforeInsert()
-  async setHomeDir() {
-    this.homeDir = this.title.replace(/ /g, '-') + '_' + moment().format('YYYY.MM.DD');
-    console.log(this.homeDir);
-  }
+  // @BeforeInsert()
+  // async setHomeDir() {
+  //   this.homeDir = this.title.replace(/ /g, '-') + '_' + moment().format('YYYY.MM.DD');
+  //   console.log(this.homeDir);
+  // }
 }
