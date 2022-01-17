@@ -1,6 +1,7 @@
 import { ProjectModel } from '@app/projects/models/project.model';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { User } from '@app/users/entities/user.entity';
 
 @Entity({ name: 'projects' })
 export class Project extends ProjectModel {
@@ -26,4 +27,7 @@ export class Project extends ProjectModel {
   @ApiPropertyOptional()
   @Column({ nullable: true })
   details?: string;
+
+  @ManyToOne(() => User, user => user.projects, { eager: true })
+  owner: User;
 }

@@ -5,20 +5,39 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Project } from '@app/projects/entities/project.entity';
 import { Repository } from 'typeorm';
 import { IsTakenField } from '@app/utils/isTakenField';
+import { User } from '@app/users/entities/user.entity';
+import { ProjectResponseInterface } from '@app/projects/types/projectResponse.interface';
 
 @Injectable()
 export class ProjectsService {
   constructor(@InjectRepository(Project) public repo: Repository<Project>) {}
 
+  buildProjectResponse(project: Project): ProjectResponseInterface {
+    return {
+      ...project,
+      owner: {
+        id: project.owner.id,
+        username: project.owner.username,
+        email: project.owner.email,
+        name: project.owner.name,
+        surname: project.owner.surname,
+        phone: project.owner.phone,
+        image: project.owner.image,
+      },
+    };
+  }
+
   // Создать новый проект
-  async create(createProjectDto: CreateProjectDto): Promise<Project> {
+  async create(user: User, createProjectDto: CreateProjectDto): Promise<Project> {
     // await IsTakenField(this.repo, 'name', createProjectDto, Project.name);
-    const project = this.repo.create(createProjectDto);
+    const project = await this.repo.create(createProjectDto);
+    project.owner = user;
     return await this.repo.save(project);
   }
 
   // Получить все проекты
   async getAll(): Promise<Project[]> {
+    // return await this.repo.find({ relations: ['owner'] });
     return await this.repo.find();
   }
 

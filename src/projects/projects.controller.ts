@@ -7,6 +7,9 @@ import { AuthGuard } from '@app/users/guards/auth.guard';
 import { Project } from '@app/projects/entities/project.entity';
 import { RoleDecorator } from '@app/roles/decorators/role.decorator';
 import { RolesGuard } from '@app/roles/guards/roles.guard';
+import { UserDecorator } from '@app/users/decorators/user.decorator';
+import { User } from '@app/users/entities/user.entity';
+import { ProjectResponseInterface } from '@app/projects/types/projectResponse.interface';
 
 @ApiTags('Проекты')
 @UseGuards(AuthGuard)
@@ -20,24 +23,30 @@ export class ProjectsController {
   @ApiResponse({ status: 200, type: Project })
   @RoleDecorator('Producer', 'Art director', 'Manager')
   @UseGuards(RolesGuard)
-  create(@Body() createProjectDto: CreateProjectDto): Promise<Project> {
-    return this.projectsService.create(createProjectDto);
+  async create(
+    @UserDecorator() currentUser: User,
+    @Body() createProjectDto: CreateProjectDto,
+  ): Promise<ProjectResponseInterface> {
+    const project = await this.projectsService.create(currentUser, createProjectDto);
+    return this.projectsService.buildProjectResponse(project);
   }
 
   // Получить все проекты
   @Get()
   @ApiOperation({ summary: 'Получить все проекты' })
   @ApiResponse({ status: 200, type: [Project] })
-  getAll() {
-    return this.projectsService.getAll();
+  async getAll(): Promise<ProjectResponseInterface[]> {
+    const projects = await this.projectsService.getAll();
+    return projects.map(project => this.projectsService.buildProjectResponse(project));
   }
 
   // Получить проект по ID
   @Get(':id')
   @ApiOperation({ summary: 'Получить проект по ID' })
   @ApiResponse({ status: 200, type: Project })
-  getById(@Param('id') id: string) {
-    return this.projectsService.getById(+id);
+  async getById(@Param('id') id: string): Promise<ProjectResponseInterface> {
+    const project = await this.projectsService.getById(+id);
+    return this.projectsService.buildProjectResponse(project);
   }
 
   // Изменить проект по ID
@@ -56,7 +65,10 @@ export class ProjectsController {
   @ApiResponse({ status: 200, type: Project })
   @RoleDecorator('Producer', 'Art director', 'Manager')
   @UseGuards(RolesGuard)
-  remove(@Param('id') id: string) {
+  remove(
+    @Param('id')
+    id: string,
+  ) {
     return this.projectsService.remove(+id);
   }
 }

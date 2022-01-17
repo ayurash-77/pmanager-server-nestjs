@@ -29,10 +29,8 @@ export class UsersService {
 
   buildUserResponse(user: User): UserResponseInterface {
     return {
-      user: {
-        ...user,
-        token: this.generateJwt(user),
-      },
+      ...user,
+      token: this.generateJwt(user),
     };
   }
 
