@@ -10,21 +10,22 @@ import { MediaFile } from '@app/files/types/mediaFile';
 
 @Injectable()
 export class FilesService {
-  // Save files
-  async saveFiles(files: MediaFile[]): Promise<FileElementResponseDto[]> {
+  // Save file
+  async saveFile(file: MediaFile): Promise<FileElementResponseDto> {
     const date = format(new Date(), 'yyyy.MM.dd');
     const uploadDir = path.resolve(appPath, 'upload', date);
     await ensureDir(uploadDir);
 
-    const res: FileElementResponseDto[] = [];
-    for (const file of files) {
-      await writeFile(path.resolve(uploadDir, file.originalname), file.buffer);
-      res.push({
-        url: `${date}/${file.originalname}`,
-        name: file.originalname,
-      });
-    }
-    return res;
+    await writeFile(path.resolve(uploadDir, file.originalname), file.buffer);
+    return {
+      url: `${date}/${file.originalname}`,
+      name: file.originalname,
+    };
+  }
+
+  // Get Uniq Str
+  uniqStr() {
+    return ((Math.random() * Math.pow(36, 6)) | 0).toString(36);
   }
 
   // Convert image
@@ -36,7 +37,6 @@ export class FilesService {
     if (format === 'webp') res = sharp(file).resize(size[0], size[1]).webp();
     return res.toBuffer();
   }
-
 
   async createFile(file, homeDir: string): Promise<string> {
     try {
