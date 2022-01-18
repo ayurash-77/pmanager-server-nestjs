@@ -6,11 +6,15 @@ import { Project } from '@app/projects/entities/project.entity';
 import { Repository } from 'typeorm';
 import { User } from '@app/users/entities/user.entity';
 import { ProjectResponseInterface } from '@app/projects/types/projectResponse.interface';
-import * as moment from 'moment';
+import { FilesService } from '@app/files/files.service';
+import { format } from 'date-fns';
 
 @Injectable()
 export class ProjectsService {
-  constructor(@InjectRepository(Project) public repo: Repository<Project>) {}
+  constructor(
+    @InjectRepository(Project) public repo: Repository<Project>,
+    private filesService: FilesService,
+  ) {}
 
   buildProjectResponse(project: Project): ProjectResponseInterface {
     return {
@@ -28,8 +32,8 @@ export class ProjectsService {
   }
 
   setProjectDir(title: string) {
-    const data = moment().format('YYYY.MM.DD');
-    return title.replace(/ /g, '-') + '_' + data;
+    const date = format(new Date(), 'yyyy.MM.dd');
+    return title.replace(/ /g, '-') + '_' + date;
   }
 
   async getHomeDir(dto: UpdateProjectDto, id?: number) {
@@ -48,8 +52,10 @@ export class ProjectsService {
   // Создать новый проект
   async create(user: User, createProjectDto: CreateProjectDto): Promise<Project> {
     const homeDir = await this.getHomeDir(createProjectDto);
+
     if (homeDir) {
       const project = await this.repo.create(createProjectDto);
+
       project.homeDir = homeDir;
       project.owner = user;
       return await this.repo.save(project);

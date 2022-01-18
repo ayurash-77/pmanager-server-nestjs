@@ -38,5 +38,6 @@ lerna-debug.log*
 .env-prod.env
 .env
 
+/uploads/*
 /src/seeds/*
 /src/ormconfig.ts

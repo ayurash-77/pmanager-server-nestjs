@@ -7,7 +7,7 @@ import { Tag } from './entities/tag.entity';
 import { AuthGuard } from '@app/users/guards/auth.guard';
 
 @ApiTags('Теги')
-@Controller('api/tags')
+@Controller('tags')
 export class TagsController {
   constructor(private readonly tagsService: TagsService) {}
 

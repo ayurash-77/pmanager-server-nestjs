@@ -10,7 +10,7 @@ import { RolesGuard } from '@app/roles/guards/roles.guard';
 
 @ApiTags('Брэнды')
 @UseGuards(AuthGuard)
-@Controller('api/brands')
+@Controller('brands')
 export class BrandsController {
   constructor(private readonly brandsService: BrandsService) {}
 

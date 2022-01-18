@@ -40,9 +40,7 @@ export class ProjectModel {
   @Column({ nullable: true })
   details?: string;
 
-  // @BeforeInsert()
-  // async setHomeDir() {
-  //   this.homeDir = this.title.replace(/ /g, '-') + '_' + moment().format('YYYY.MM.DD');
-  //   console.log(this.homeDir);
-  // }
+  // @ApiProperty({ example: 'file/file.jpg', description: 'Имя файла' })
+  // @ApiPropertyOptional()
+  // image?: string;
 }

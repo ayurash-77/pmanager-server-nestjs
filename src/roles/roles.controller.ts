@@ -7,7 +7,7 @@ import { UpdateRoleDto } from './dto/update-role.dto';
 import { AddJobDto } from '@app/roles/dto/add-job.dto';
 
 @ApiTags('Роли')
-@Controller('api')
+@Controller()
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 

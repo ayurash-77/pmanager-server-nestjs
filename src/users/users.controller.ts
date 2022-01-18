@@ -12,7 +12,7 @@ import { AdminUpdateUserDto } from '@app/users/dto/admin-update-user.dto';
 import { AuthGuard } from '@app/users/guards/auth.guard';
 
 @ApiTags('Пользователи')
-@Controller('api')
+@Controller()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 

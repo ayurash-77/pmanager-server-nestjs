@@ -1,5 +1,4 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
-import { AppController } from '@app/app.controller';
 import { AppService } from '@app/app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TagsModule } from '@app/tags/tags.module';
@@ -12,6 +11,7 @@ import { RolesModule } from './roles/roles.module';
 import { BrandsModule } from './brands/brands.module';
 import { AgenciesModule } from './agencies/agencies.module';
 import { ProjectsModule } from './projects/projects.module';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
@@ -24,8 +24,8 @@ import { ProjectsModule } from './projects/projects.module';
     BrandsModule,
     AgenciesModule,
     ProjectsModule,
+    FilesModule,
   ],
-  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {
