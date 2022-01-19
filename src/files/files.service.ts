@@ -31,6 +31,9 @@ export class FilesService {
     const dstPath = moveFileDto.dstPath;
     await ensureDir(path.dirname(dstPath));
 
+    // console.log(srcPath);
+    // console.log(dstPath);
+
     fs.access(srcPath, fs.constants.R_OK, async err => {
       if (!err) {
         try {

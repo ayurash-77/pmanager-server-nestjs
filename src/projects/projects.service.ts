@@ -10,6 +10,7 @@ import { FilesService } from '@app/files/files.service';
 import { format, getQuarter } from 'date-fns';
 import { MoveFileDto } from '@app/files/dto/move-file.dto';
 import { path as appPath } from 'app-root-path';
+import { ProjectDateInterface } from '@app/projects/types/projectDate.interface';
 
 @Injectable()
 export class ProjectsService {
@@ -33,24 +34,26 @@ export class ProjectsService {
     };
   }
 
-  setProjectDir(title: string) {
-    const date = new Date();
-    const newDate = format(date, 'yyyy.MM.dd');
-    const quarter = getQuarter(date);
-    const newTitle = title.replace(/ /g, '-');
+  // Получить объект даты
+  getProjectDate(date): ProjectDateInterface {
+    const dateStr = format(date, 'yyyy.MM.dd');
     const year = date.getFullYear();
-    return `${year}-${quarter}/${newTitle}_${newDate}`;
+    const quarter = getQuarter(date);
+    const yearQuarter = `${year}-${quarter}`;
+    return { date, dateStr, year, quarter, yearQuarter };
   }
 
   // Получить домашншюю папку проекта
-  async getHomeDir(dto: UpdateProjectDto, id?: number) {
-    const homeDir = this.setProjectDir(dto.title);
+  async getHomeDir(dto: UpdateProjectDto, date) {
+    const projectDate: ProjectDateInterface = this.getProjectDate(date);
+    const newTitle = dto.title.replace(/ /g, '-');
+    const homeDir = `${projectDate.yearQuarter}/${newTitle}_${projectDate.dateStr}`;
+
     const candidate = await this.repo.findOne({ homeDir });
-    const data = homeDir.split('_').pop();
-    if (candidate && candidate.id == id) return homeDir;
+    // if (candidate && candidate.id == id) return homeDir;
     if (candidate)
       throw new HttpException(
-        `Проект с названием '${dto.title}' и датой '${data}' уже существует`,
+        `Проект с названием '${dto.title}' и датой '${projectDate.dateStr}' уже существует`,
         HttpStatus.UNPROCESSABLE_ENTITY,
       );
     return homeDir;
@@ -58,25 +61,29 @@ export class ProjectsService {
 
   // Создать новый проект
   async create(user: User, createProjectDto: CreateProjectDto): Promise<Project> {
-    const homeDir = await this.getHomeDir(createProjectDto);
+    const homeDir = await this.getHomeDir(createProjectDto, new Date());
 
     if (homeDir) {
       const project = await this.repo.create(createProjectDto);
 
       // Добавить изображение проекта если существует
-      const imagePath = createProjectDto.image;
-      if (imagePath) {
-        const uploadDir = `${appPath}/upload`;
-        const moveFileDto: MoveFileDto = {
-          srcPath: `${uploadDir}/${imagePath}`,
-          dstPath: `${process.env.WORK_ROOT}/${homeDir}/.pmdata/projectThumbnail.jpg`,
-        };
-        await this.filesService.moveFile(moveFileDto);
-      }
+      await this.addProjectImage(createProjectDto.homeDir, createProjectDto.image);
 
       project.homeDir = homeDir;
       project.owner = user;
       return await this.repo.save(project);
+    }
+  }
+
+  // Добавить изображение проекта если существует
+  async addProjectImage(homeDir, imagePath) {
+    if (imagePath) {
+      const uploadDir = `${appPath}/upload`;
+      const moveFileDto: MoveFileDto = {
+        srcPath: `${uploadDir}/${imagePath}`,
+        dstPath: `${process.env.WORK_ROOT}/${homeDir}/.pmdata/projectThumbnail.jpg`,
+      };
+      await this.filesService.moveFile(moveFileDto);
     }
   }
 
@@ -96,13 +103,9 @@ export class ProjectsService {
   // Изменить проект по ID
   async update(id: number, updateProjectDto: UpdateProjectDto): Promise<Project> {
     const project = await this.getById(id);
-    const homeDir = await this.getHomeDir(updateProjectDto, id);
-
-    if (homeDir) {
-      Object.assign(project, updateProjectDto);
-      project.homeDir = homeDir;
-      return this.repo.save(project);
-    }
+    await this.addProjectImage(project.homeDir, updateProjectDto.image);
+    Object.assign(project, updateProjectDto);
+    return this.repo.save(project);
   }
 
   // Удалить проект по ID
