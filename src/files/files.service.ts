@@ -20,12 +20,32 @@ export class FilesService {
     return {
       url: `${date}/${file.originalname}`,
       name: file.originalname,
+      category: file.category,
     };
   }
 
   // Get Uniq Str
   uniqStr() {
     return ((Math.random() * Math.pow(36, 6)) | 0).toString(36);
+  }
+
+  // Check for file is an image
+  checkForImage(file: Express.Multer.File): boolean {
+    if (!file.mimetype.includes('image')) {
+      throw new HttpException(`Недопустимый формат файла`, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+    }
+    return true;
+  }
+
+  // Check for file is a brief
+  checkForBrief(file: Express.Multer.File): boolean {
+    if (
+      !file.mimetype.includes('application/pdf') &&
+      !file.mimetype.includes('application/vnd.openxmlformats-officedocument')
+    ) {
+      throw new HttpException(`Недопустимый формат файла`, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+    }
+    return true;
   }
 
   // Convert image
