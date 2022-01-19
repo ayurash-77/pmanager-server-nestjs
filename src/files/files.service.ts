@@ -3,10 +3,11 @@ import { path as appPath } from 'app-root-path';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as sharp from 'sharp';
-import { ensureDir, writeFile } from 'fs-extra';
+import { ensureDir, writeFile, move } from 'fs-extra';
 import { FileElementResponseDto } from '@app/files/dto/fileElementResponse.dto';
 import { format } from 'date-fns';
 import { MediaFile } from '@app/files/types/mediaFile';
+import { MoveFileDto } from '@app/files/dto/move-file.dto';
 
 @Injectable()
 export class FilesService {
@@ -24,8 +25,26 @@ export class FilesService {
     };
   }
 
-  // Get Uniq Str
-  uniqStr() {
+  // Move file
+  async moveFile(moveFileDto: MoveFileDto) {
+    const srcPath = moveFileDto.srcPath;
+    const dstPath = moveFileDto.dstPath;
+    await ensureDir(path.dirname(dstPath));
+
+    fs.access(srcPath, fs.constants.R_OK, async err => {
+      if (!err) {
+        try {
+          await move(srcPath, dstPath, { overwrite: true });
+        } catch (error) {
+          throw new HttpException(`Ошибка записи файла`, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+      }
+    });
+    return true;
+  }
+
+  // Get Unique String
+  getUniqueString() {
     return ((Math.random() * Math.pow(36, 6)) | 0).toString(36);
   }
 

@@ -7,7 +7,9 @@ import { Repository } from 'typeorm';
 import { User } from '@app/users/entities/user.entity';
 import { ProjectResponseInterface } from '@app/projects/types/projectResponse.interface';
 import { FilesService } from '@app/files/files.service';
-import { format } from 'date-fns';
+import { format, getQuarter } from 'date-fns';
+import { MoveFileDto } from '@app/files/dto/move-file.dto';
+import { path as appPath } from 'app-root-path';
 
 @Injectable()
 export class ProjectsService {
@@ -32,10 +34,15 @@ export class ProjectsService {
   }
 
   setProjectDir(title: string) {
-    const date = format(new Date(), 'yyyy.MM.dd');
-    return title.replace(/ /g, '-') + '_' + date;
+    const date = new Date();
+    const newDate = format(date, 'yyyy.MM.dd');
+    const quarter = getQuarter(date);
+    const newTitle = title.replace(/ /g, '-');
+    const year = date.getFullYear();
+    return `${year}-${quarter}/${newTitle}_${newDate}`;
   }
 
+  // Получить домашншюю папку проекта
   async getHomeDir(dto: UpdateProjectDto, id?: number) {
     const homeDir = this.setProjectDir(dto.title);
     const candidate = await this.repo.findOne({ homeDir });
@@ -55,6 +62,17 @@ export class ProjectsService {
 
     if (homeDir) {
       const project = await this.repo.create(createProjectDto);
+
+      // Добавить изображение проекта если существует
+      const imagePath = createProjectDto.image;
+      if (imagePath) {
+        const uploadDir = `${appPath}/upload`;
+        const moveFileDto: MoveFileDto = {
+          srcPath: `${uploadDir}/${imagePath}`,
+          dstPath: `${process.env.WORK_ROOT}/${homeDir}/.pmdata/projectThumbnail.jpg`,
+        };
+        await this.filesService.moveFile(moveFileDto);
+      }
 
       project.homeDir = homeDir;
       project.owner = user;

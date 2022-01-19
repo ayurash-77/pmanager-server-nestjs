@@ -8,6 +8,7 @@ import { AuthGuard } from '@app/users/guards/auth.guard';
 
 @ApiTags('Теги')
 @Controller('tags')
+@UseGuards(AuthGuard)
 export class TagsController {
   constructor(private readonly tagsService: TagsService) {}
 
@@ -47,7 +48,6 @@ export class TagsController {
   @Delete(':id')
   @ApiOperation({ summary: 'Удалить тег по ID' })
   @ApiResponse({ status: 200, type: Tag })
-  @UseGuards(AuthGuard)
   remove(@Param('id') id: string): Promise<Tag> {
     return this.tagsService.remove(+id);
   }

@@ -9,4 +9,8 @@ export class CreateProjectDto extends ProjectModel {
   @IsOptional()
   @IsString({ message: `поле 'details' должно быть строкой` })
   details?: string;
+
+  @IsOptional()
+  @IsString({ message: `поле 'image' должно быть строкой` })
+  image?: string;
 }

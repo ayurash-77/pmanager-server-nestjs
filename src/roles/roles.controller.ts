@@ -1,13 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RolesService } from './roles.service';
 import { Role } from './entities/role.entity';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { AddJobDto } from '@app/roles/dto/add-job.dto';
+import { AuthGuard } from '@app/users/guards/auth.guard';
 
 @ApiTags('Роли')
 @Controller()
+@UseGuards(AuthGuard)
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
@@ -53,12 +55,16 @@ export class RolesController {
 
   // Добавить тип работ
   @Post('roles/add-job')
+  @ApiOperation({ summary: 'Добавить тип работ к роли' })
+  @ApiResponse({ status: 200, type: Role })
   addJob(@Body() dto: AddJobDto): Promise<Role> {
     return this.rolesService.addJob(dto);
   }
 
   // Удалить тип работ
   @Post('roles/remove-job')
+  @ApiOperation({ summary: 'Удалить тип работ из роли' })
+  @ApiResponse({ status: 200, type: Role })
   removeJob(@Body() dto: AddJobDto): Promise<Role> {
     return this.rolesService.removeJob(dto);
   }

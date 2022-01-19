@@ -4,15 +4,19 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { FileElementResponseDto } from '@app/files/dto/fileElementResponse.dto';
 import { FilesService } from '@app/files/files.service';
 import { MediaFile } from '@app/files/types/mediaFile';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Файлы')
 @Controller('files')
+@UseGuards(AuthGuard)
 export class FilesController {
   constructor(private readonly filesService: FilesService) {}
 
-  // Upload files
+  // Upload file
   @Post('upload/:category')
+  @ApiOperation({ summary: 'Загрузить файл' })
+  @ApiResponse({ status: 200, type: FileElementResponseDto })
   @HttpCode(200)
-  @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
     @Param('category') category: string,
@@ -26,14 +30,14 @@ export class FilesController {
       const format = 'jpg';
       const size = [320, 180];
       newBuffer = await this.filesService.convertImage(file.buffer, size, format);
-      newOriginalname = `thumbnail_${this.filesService.uniqStr()}.${format}`;
+      newOriginalname = `thumbnail_${this.filesService.getUniqueString()}.${format}`;
     }
     if (category === 'userImage') {
       this.filesService.checkForImage(file);
       const format = 'jpg';
       const size = [320, 320];
       newBuffer = await this.filesService.convertImage(file.buffer, size, format);
-      newOriginalname = `userImage_${this.filesService.uniqStr()}.${format}`;
+      newOriginalname = `userImage_${this.filesService.getUniqueString()}.${format}`;
     }
     if (category === 'brief') {
       this.filesService.checkForBrief(file);
