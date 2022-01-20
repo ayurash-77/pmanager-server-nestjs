@@ -9,10 +9,14 @@ import { UserResponseInterface } from './types/userResponse.interface';
 import { LoginUserDto } from './dto/login-user.dto';
 import { hash, compare } from 'bcrypt';
 import { IsTakenField } from '@app/utils/isTakenField';
+import { path as appPath } from 'app-root-path';
+import { MoveFileDto } from '@app/files/dto/move-file.dto';
+import { FilesService } from '@app/files/files.service';
+import * as fse from 'fs-extra';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectRepository(User) private repo: Repository<User>) {}
+  constructor(@InjectRepository(User) private repo: Repository<User>, private filesService: FilesService) {}
 
   // Jwt Generation
   generateJwt(user: User): string {
@@ -64,7 +68,28 @@ export class UsersService {
     const user = new User();
     Object.assign(user, createUserDto);
     user.password = await this.hashPassword(createUserDto.password);
+    if (user.image) {
+      user.image = await this.addUserImage(user.username, user.image);
+    }
     return await this.repo.save(user);
+  }
+
+  // Добавить (из UPLOAD) изображение пользователя если существует
+  async addUserImage(username, imagePath): Promise<string | null> {
+    if (imagePath) {
+      const srcPath = imagePath;
+      const newImagePath = `${process.env.STATIC_DIR}/users/${username}/userImage.jpg`;
+      const dstPath = `${appPath}/${newImagePath}`;
+      const moveFileDto: MoveFileDto = { srcPath, dstPath };
+
+      console.log(moveFileDto);
+      const srcPathExists = await fse.pathExists(srcPath);
+      if (srcPathExists) {
+        const move = await this.filesService.moveFile(moveFileDto);
+        if (move) return newImagePath;
+      }
+      return null;
+    }
   }
 
   // Получить всех пользователей

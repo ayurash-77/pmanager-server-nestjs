@@ -30,7 +30,7 @@ export class FilesController {
       const format = 'jpg';
       const size = [320, 180];
       newBuffer = await this.filesService.convertImage(file.buffer, size, format);
-      newOriginalname = `thumbnail_${this.filesService.getUniqueString()}.${format}`;
+      newOriginalname = `projectThumbnail_${this.filesService.getUniqueString()}.${format}`;
     }
     if (category === 'userImage') {
       this.filesService.checkForImage(file);
@@ -41,7 +41,7 @@ export class FilesController {
     }
     if (category === 'brief') {
       this.filesService.checkForBrief(file);
-      newOriginalname = `Brief_${file.originalname}`;
+      newOriginalname = `brief_${file.originalname}`;
     }
     const newMediaFile = new MediaFile({ originalname: newOriginalname, buffer: newBuffer }, category);
     return this.filesService.saveFile(newMediaFile);

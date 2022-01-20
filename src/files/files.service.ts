@@ -18,7 +18,7 @@ export class FilesService {
 
     await fse.writeFile(path.resolve(uploadDir, file.originalname), file.buffer);
     return {
-      url: `${date}/${file.originalname}`,
+      url: `${process.env.UPLOAD_DIR}/${date}/${file.originalname}`,
       name: file.originalname,
       category: file.category,
     };
@@ -36,8 +36,9 @@ export class FilesService {
       } catch (error) {
         throw new HttpException(`Ошибка записи файла`, HttpStatus.INTERNAL_SERVER_ERROR);
       }
+      return true;
     }
-    return true;
+    return false;
   }
 
   // Удалить папку/файл

@@ -70,22 +70,21 @@ export class ProjectsService {
 
     if (homeDir) {
       const project = await this.repo.create(createProjectDto);
+      project.homeDir = homeDir;
 
       // Добавить изображение проекта если существует
-      await this.addProjectImage(createProjectDto.homeDir, createProjectDto.image);
+      await this.addProjectImage(project.homeDir, createProjectDto.image);
 
-      project.homeDir = homeDir;
       project.owner = user;
       return await this.repo.save(project);
     }
   }
 
-  // Добавить изображение проекта если существует
+  // Добавить (из UPLOAD) изображение проекта если существует
   async addProjectImage(homeDir, imagePath) {
     if (homeDir && imagePath) {
-      const uploadDir = `${appPath}/upload`;
       const moveFileDto: MoveFileDto = {
-        srcPath: `${uploadDir}/${imagePath}`,
+        srcPath: `${appPath}/${imagePath}`,
         dstPath: `${process.env.WORK_ROOT}/${homeDir}/.pmdata/projectThumbnail.jpg`,
       };
       await this.filesService.moveFile(moveFileDto);
