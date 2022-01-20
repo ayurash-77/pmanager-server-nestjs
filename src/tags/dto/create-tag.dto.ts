@@ -1,8 +1,9 @@
 import { IsNotEmpty, IsString } from 'class-validator';
-import { TagModel } from '@app/tags/models/tag.model';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateTagDto extends TagModel {
+export class CreateTagDto {
   @IsNotEmpty({ message: `поле 'name' не может быть пустым` })
   @IsString({ message: `поле 'name' должно быть строкой` })
+  @ApiProperty({ example: 'Overview', description: 'Имя тега' })
   readonly name: string;
 }

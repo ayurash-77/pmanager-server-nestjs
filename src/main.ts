@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3000;
 
 const mode = process.env.NODE_ENV.toUpperCase().split('-')[1];
 if (process.env.NODE_ENV == 'env-dev') {
-  console.log(colors.red(mode), 'mode');
+  console.log(colors.yellow(`Server starting...`), '::', colors.red(mode), 'mode');
 }
 
 async function bootstrap() {
@@ -36,5 +36,5 @@ async function bootstrap() {
 }
 
 bootstrap().then(() => {
-  console.log(colors.blue(`Server ready on port: ${PORT}`), '::', colors.red(mode), 'mode');
+  console.log(colors.green(`Server ready on port: ${PORT}`), '::', colors.red(mode), 'mode');
 });
