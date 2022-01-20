@@ -14,6 +14,7 @@ import { IsTakenField } from '@app/utils/isTakenField';
 export class UsersService {
   constructor(@InjectRepository(User) private repo: Repository<User>) {}
 
+  // Jwt Generation
   generateJwt(user: User): string {
     return sign(
       {
@@ -34,6 +35,7 @@ export class UsersService {
     };
   }
 
+  // Авторизация
   async login(userLoginDto: LoginUserDto): Promise<User> {
     const user = await this.repo.findOne({
       where: [{ email: userLoginDto.username }, { username: userLoginDto.username }],
@@ -50,6 +52,7 @@ export class UsersService {
     return user;
   }
 
+  // Хеширование
   async hashPassword(password) {
     return await hash(password, 5);
   }
@@ -69,6 +72,7 @@ export class UsersService {
     return this.repo.find();
   }
 
+  // Получить пользователя по ID
   async getById(id: number): Promise<User | null> {
     const user = await this.repo.findOne(id, { relations: ['roles'] });
     if (!user) throw new HttpException(`Пользователь с ID=${id} не найден`, HttpStatus.NOT_FOUND);

@@ -1,6 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { path as appPath } from 'app-root-path';
-import * as fs from 'fs';
 import * as path from 'path';
 import * as sharp from 'sharp';
 import * as fse from 'fs-extra';
@@ -82,31 +81,5 @@ export class FilesService {
     if (format === 'png') res = sharp(file).resize(size[0], size[1]).png();
     if (format === 'webp') res = sharp(file).resize(size[0], size[1]).webp();
     return res.toBuffer();
-  }
-
-  async createFile(file, homeDir: string): Promise<string> {
-    try {
-      const srcDir = path.resolve(appPath, 'uploads');
-      const dstDir = path.resolve(process.env.WORK_ROOT, homeDir, '.pmdata');
-
-      const fileName = 'project-thumbnail.jpg';
-
-      const srcPath = path.resolve(srcDir, file.originalname);
-      const dstPath = path.resolve(dstDir, fileName);
-
-      !fs.existsSync(srcDir) && fs.mkdirSync(srcDir, { recursive: true });
-      !fs.existsSync(dstDir) && fs.mkdirSync(dstDir, { recursive: true });
-
-      fs.writeFileSync(srcPath, file.buffer);
-
-      srcPath && (await sharp(srcPath).resize(320, 320).jpeg({ quality: 95 }).toFile(dstPath));
-      console.log(srcPath);
-      console.log(dstPath);
-      // fs.existsSync(srcPath) && fs.rmSync(srcPath);
-
-      return fileName;
-    } catch (e) {
-      throw new HttpException(`Ошибка записи файла: ${e.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
   }
 }
