@@ -10,6 +10,7 @@ import { RolesGuard } from '@app/roles/guards/roles.guard';
 import { UserDecorator } from '@app/users/decorators/user.decorator';
 import { User } from '@app/users/entities/user.entity';
 import { ProjectResponseInterface } from '@app/projects/types/projectResponse.interface';
+import { RemoveProjectResponseInterface } from '@app/projects/types/removeProjectResponse.interface';
 
 @ApiTags('Проекты')
 @Controller('projects')
@@ -55,7 +56,10 @@ export class ProjectsController {
   @ApiResponse({ status: 200, type: Project })
   @RoleDecorator('Producer', 'Art director', 'Manager')
   @UseGuards(RolesGuard)
-  async update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateProjectDto: UpdateProjectDto,
+  ): Promise<ProjectResponseInterface> {
     const project = await this.projectsService.update(+id, updateProjectDto);
     return this.projectsService.buildProjectResponse(project);
   }
@@ -66,10 +70,8 @@ export class ProjectsController {
   @ApiResponse({ status: 200, type: Project })
   @RoleDecorator('Producer', 'Art director', 'Manager')
   @UseGuards(RolesGuard)
-  remove(
-    @Param('id')
-    id: string,
-  ) {
-    return this.projectsService.remove(+id);
+  async remove(@Param('id') id: string): Promise<RemoveProjectResponseInterface> {
+    const project = await this.projectsService.remove(+id);
+    return this.projectsService.buildRemoveProjectResponse(project);
   }
 }

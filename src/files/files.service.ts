@@ -3,7 +3,7 @@ import { path as appPath } from 'app-root-path';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as sharp from 'sharp';
-import { ensureDir, writeFile, move } from 'fs-extra';
+import * as fse from 'fs-extra';
 import { FileElementResponseDto } from '@app/files/dto/fileElementResponse.dto';
 import { format } from 'date-fns';
 import { MediaFile } from '@app/files/types/mediaFile';
@@ -15,9 +15,9 @@ export class FilesService {
   async saveFile(file: MediaFile): Promise<FileElementResponseDto> {
     const date = format(new Date(), 'yyyy.MM.dd');
     const uploadDir = path.resolve(appPath, 'upload', date);
-    await ensureDir(uploadDir);
+    await fse.ensureDir(uploadDir);
 
-    await writeFile(path.resolve(uploadDir, file.originalname), file.buffer);
+    await fse.writeFile(path.resolve(uploadDir, file.originalname), file.buffer);
     return {
       url: `${date}/${file.originalname}`,
       name: file.originalname,
@@ -29,21 +29,25 @@ export class FilesService {
   async moveFile(moveFileDto: MoveFileDto) {
     const srcPath = moveFileDto.srcPath;
     const dstPath = moveFileDto.dstPath;
-    await ensureDir(path.dirname(dstPath));
-
-    // console.log(srcPath);
-    // console.log(dstPath);
-
-    fs.access(srcPath, fs.constants.R_OK, async err => {
-      if (!err) {
-        try {
-          await move(srcPath, dstPath, { overwrite: true });
-        } catch (error) {
-          throw new HttpException(`Ошибка записи файла`, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    await fse.ensureDir(path.dirname(dstPath));
+    const srcPathExists = await fse.pathExists(srcPath);
+    if (srcPathExists) {
+      try {
+        await fse.move(srcPath, dstPath, { overwrite: true });
+      } catch (error) {
+        throw new HttpException(`Ошибка записи файла`, HttpStatus.INTERNAL_SERVER_ERROR);
       }
-    });
+    }
     return true;
+  }
+
+  // Удалить папку/файл
+  async remove(path) {
+    try {
+      await fse.remove(path);
+    } catch (e) {
+      throw new HttpException(`Ошибка при удалении папки/файла`, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   // Get Unique String

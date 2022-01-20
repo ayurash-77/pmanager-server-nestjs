@@ -11,6 +11,7 @@ import { format, getQuarter } from 'date-fns';
 import { MoveFileDto } from '@app/files/dto/move-file.dto';
 import { path as appPath } from 'app-root-path';
 import { ProjectDateInterface } from '@app/projects/types/projectDate.interface';
+import { RemoveProjectResponseInterface } from '@app/projects/types/removeProjectResponse.interface';
 
 @Injectable()
 export class ProjectsService {
@@ -32,6 +33,10 @@ export class ProjectsService {
         image: project.owner.image,
       },
     };
+  }
+
+  buildRemoveProjectResponse(project: Project): RemoveProjectResponseInterface {
+    return { project, message: `Проект '${project.title}' успешно удален.` };
   }
 
   // Получить объект даты
@@ -77,7 +82,7 @@ export class ProjectsService {
 
   // Добавить изображение проекта если существует
   async addProjectImage(homeDir, imagePath) {
-    if (imagePath) {
+    if (homeDir && imagePath) {
       const uploadDir = `${appPath}/upload`;
       const moveFileDto: MoveFileDto = {
         srcPath: `${uploadDir}/${imagePath}`,
@@ -111,6 +116,8 @@ export class ProjectsService {
   // Удалить проект по ID
   async remove(id: number): Promise<Project> {
     const project = await this.getById(id);
+    const projectPath = `${process.env.WORK_ROOT}/${project.homeDir}`;
+    await this.filesService.remove(projectPath);
     return this.repo.remove(project);
   }
 }
