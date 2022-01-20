@@ -7,7 +7,7 @@ import { Repository } from 'typeorm';
 import { sign } from 'jsonwebtoken';
 import { UserResponseInterface } from './types/userResponse.interface';
 import { LoginUserDto } from './dto/login-user.dto';
-import { hash, compare } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
 import { IsTakenField } from '@app/utils/isTakenField';
 import { path as appPath } from 'app-root-path';
 import { MoveFileDto } from '@app/files/dto/move-file.dto';
@@ -114,8 +114,13 @@ export class UsersService {
     await IsTakenField(this.repo, 'username', updateUserDto, User.name, id);
     await IsTakenField(this.repo, 'email', updateUserDto, User.name, id);
 
+    const oldImage = user.image;
+
     Object.assign(user, updateUserDto);
-    user.image = await this.addUserImage(user.username, updateUserDto.image);
+    const newImage = await this.addUserImage(user.username, updateUserDto.image);
+
+    user.image = newImage ? newImage : oldImage;
+
     if (user.password) user.password = await hash(updateUserDto.password, 5);
     return this.repo.save(user);
   }

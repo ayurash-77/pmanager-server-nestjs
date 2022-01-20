@@ -34,7 +34,7 @@ export class FilesService {
       try {
         await fse.move(srcPath, dstPath, { overwrite: true });
       } catch (error) {
-        throw new HttpException(`Ошибка записи файла`, HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new HttpException(`Ошибка чтения/записи файла`, HttpStatus.INTERNAL_SERVER_ERROR);
       }
       return true;
     }
