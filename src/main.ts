@@ -17,7 +17,9 @@ if (process.env.NODE_ENV == 'env-dev') {
 }
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: ['error', 'warn'],
+  });
 
   const config = new DocumentBuilder() //
     .setTitle('PP18 PManager server')
