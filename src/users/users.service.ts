@@ -13,6 +13,7 @@ import { path as appPath } from 'app-root-path';
 import { MoveFileDto } from '@app/files/dto/move-file.dto';
 import { FilesService } from '@app/files/files.service';
 import * as fse from 'fs-extra';
+import { RemoveUserResponseInterface } from '@app/users/types/removeUserResponse.interface';
 
 @Injectable()
 export class UsersService {
@@ -39,6 +40,9 @@ export class UsersService {
     };
   }
 
+  buildRemoveUserResponse(user: User): RemoveUserResponseInterface {
+    return { user, message: `Пользователь '${user.username}' удален.` };
+  }
   // Авторизация
   async login(userLoginDto: LoginUserDto): Promise<User> {
     const user = await this.repo.findOne({
@@ -75,18 +79,17 @@ export class UsersService {
   }
 
   // Добавить (из UPLOAD) изображение пользователя если существует
-  async addUserImage(username, imagePath): Promise<string | null> {
-    if (imagePath) {
-      const srcPath = imagePath;
-      const newImagePath = `${process.env.STATIC_DIR}/users/${username}/userImage.jpg`;
-      const dstPath = `${appPath}/${newImagePath}`;
+  async addUserImage(username, image): Promise<string | null> {
+    if (image) {
+      const srcPath = image;
+      const newImage = `${process.env.STATIC_DIR}/users/${username}/userImage.jpg`;
+      const dstPath = `${appPath}/${newImage}`;
       const moveFileDto: MoveFileDto = { srcPath, dstPath };
 
-      console.log(moveFileDto);
       const srcPathExists = await fse.pathExists(srcPath);
       if (srcPathExists) {
         const move = await this.filesService.moveFile(moveFileDto);
-        if (move) return newImagePath;
+        if (move) return newImage;
       }
       return null;
     }
@@ -112,6 +115,7 @@ export class UsersService {
     await IsTakenField(this.repo, 'email', updateUserDto, User.name, id);
 
     Object.assign(user, updateUserDto);
+    user.image = await this.addUserImage(user.username, updateUserDto.image);
     if (user.password) user.password = await hash(updateUserDto.password, 5);
     return this.repo.save(user);
   }
@@ -119,6 +123,8 @@ export class UsersService {
   // Удалить пользователя по ID
   async remove(id: number): Promise<User> {
     const user = await this.getById(id);
+    const userPath = `${process.env.STATIC_DIR}/users/${user.username}`;
+    await this.filesService.remove(userPath);
     return this.repo.remove(user);
   }
 }

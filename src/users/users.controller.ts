@@ -10,6 +10,7 @@ import { User } from '@app/users/entities/user.entity';
 import { AdminGuard } from '@app/users/guards/admin.guard';
 import { AdminUpdateUserDto } from '@app/users/dto/admin-update-user.dto';
 import { AuthGuard } from '@app/users/guards/auth.guard';
+import { RemoveUserResponseInterface } from '@app/users/types/removeUserResponse.interface';
 
 @ApiTags('Пользователи')
 @Controller()
@@ -48,8 +49,8 @@ export class UsersController {
   @ApiOperation({ summary: 'Получить всех пользователей' })
   @ApiResponse({ status: 200, type: [User] })
   @UseGuards(AuthGuard)
-  getAll() {
-    return this.usersService.getAll();
+  async getAll(): Promise<User[]> {
+    return await this.usersService.getAll();
   }
 
   // Получить пользователя по ID
@@ -97,7 +98,8 @@ export class UsersController {
   @ApiResponse({ status: 200, type: User })
   @UseGuards(AuthGuard)
   @UseGuards(AdminGuard)
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  async remove(@Param('id') id: string): Promise<RemoveUserResponseInterface> {
+    const user = await this.usersService.remove(+id);
+    return this.usersService.buildRemoveUserResponse(user);
   }
 }
