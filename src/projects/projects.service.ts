@@ -3,7 +3,7 @@ import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Project } from '@app/projects/entities/project.entity';
-import { Repository } from 'typeorm';
+import { Entity, Repository } from 'typeorm';
 import { User } from '@app/users/entities/user.entity';
 import { ProjectResponseInterface } from '@app/projects/types/projectResponse.interface';
 import { FilesService } from '@app/files/files.service';
@@ -12,11 +12,13 @@ import { MoveFileDto } from '@app/files/dto/move-file.dto';
 import { path as appPath } from 'app-root-path';
 import { ProjectDateInterface } from '@app/projects/types/projectDate.interface';
 import { RemoveProjectResponseInterface } from '@app/projects/types/removeProjectResponse.interface';
+import * as fse from 'fs-extra';
+import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 
 @Injectable()
 export class ProjectsService {
   constructor(
-    @InjectRepository(Project) public repo: Repository<Project>,
+    @InjectRepository(Project) public projectsRepository: Repository<Project>,
     private filesService: FilesService,
   ) {}
 
@@ -31,6 +33,7 @@ export class ProjectsService {
         surname: project.owner.surname,
         phone: project.owner.phone,
         image: project.owner.image,
+        // briefs: project.briefs,
       },
     };
   }
@@ -45,7 +48,7 @@ export class ProjectsService {
     const year = date.getFullYear();
     const quarter = getQuarter(date);
     const yearQuarter = `${year}-${quarter}`;
-    return { date, dateStr, year, quarter, yearQuarter };
+    return { dateStr, year, quarter, yearQuarter };
   }
 
   // Получить домашншюю папку проекта
@@ -54,7 +57,7 @@ export class ProjectsService {
     const newTitle = dto.title.replace(/ /g, '-');
     const homeDir = `${projectDate.yearQuarter}/${newTitle}_${projectDate.dateStr}`;
 
-    const candidate = await this.repo.findOne({ homeDir });
+    const candidate = await this.projectsRepository.findOne({ homeDir });
     // if (candidate && candidate.id == id) return homeDir;
     if (candidate)
       throw new HttpException(
@@ -69,14 +72,14 @@ export class ProjectsService {
     const homeDir = await this.getHomeDir(createProjectDto, new Date());
 
     if (homeDir) {
-      const project = await this.repo.create(createProjectDto);
+      const project = await this.projectsRepository.create(createProjectDto);
       project.homeDir = homeDir;
 
-      // Добавить изображение проекта если существует
+      await fse.ensureDir(`${process.env.WORK_ROOT}/${homeDir}`);
       await this.addProjectImage(project.homeDir, createProjectDto.image);
 
       project.owner = user;
-      return await this.repo.save(project);
+      return await this.projectsRepository.save(project);
     }
   }
 
@@ -93,13 +96,13 @@ export class ProjectsService {
 
   // Получить все проекты
   async getAll(): Promise<Project[]> {
-    // return await this.repo.find({ relations: ['owner'] });
-    return await this.repo.find();
+    // return await this.projectsRepository.find({ relations: ['owner'] });
+    return await this.projectsRepository.find();
   }
 
   // Получить проект по ID
-  async getById(id: number): Promise<Project | null> {
-    const project = await this.repo.findOne(id);
+  async getById(id: number, options?: FindOneOptions): Promise<Project | null> {
+    const project = await this.projectsRepository.findOne(id, options);
     if (!project) throw new HttpException(`Проект с id=${id} не найден`, HttpStatus.NOT_FOUND);
     return project;
   }
@@ -109,7 +112,7 @@ export class ProjectsService {
     const project = await this.getById(id);
     await this.addProjectImage(project.homeDir, updateProjectDto.image);
     Object.assign(project, updateProjectDto);
-    return this.repo.save(project);
+    return this.projectsRepository.save(project);
   }
 
   // Удалить проект по ID
@@ -117,6 +120,6 @@ export class ProjectsService {
     const project = await this.getById(id);
     const projectPath = `${process.env.WORK_ROOT}/${project.homeDir}`;
     await this.filesService.remove(projectPath);
-    return this.repo.remove(project);
+    return this.projectsRepository.remove(project);
   }
 }

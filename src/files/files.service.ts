@@ -25,7 +25,7 @@ export class FilesService {
   }
 
   // Move file
-  async moveFile(moveFileDto: MoveFileDto) {
+  async moveFile(moveFileDto: MoveFileDto): Promise<boolean> {
     const srcPath = moveFileDto.srcPath;
     const dstPath = moveFileDto.dstPath;
     await fse.ensureDir(path.dirname(dstPath));
@@ -38,7 +38,7 @@ export class FilesService {
       }
       return true;
     }
-    return false;
+    throw new HttpException(`Файл ${srcPath} не найден`, HttpStatus.NOT_FOUND);
   }
 
   // Удалить папку/файл

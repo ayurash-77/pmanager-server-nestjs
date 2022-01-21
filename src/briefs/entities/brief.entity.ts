@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Project } from '@app/projects/entities/project.entity';
+import { User } from '@app/users/entities/user.entity';
 
 @Entity({ name: 'briefs' })
 export class Brief {
@@ -16,12 +17,21 @@ export class Brief {
   id: number;
 
   @ApiProperty({ example: 'Cleanups_v01', description: 'Название брифа' })
-  @Column()
+  @Column({ unique: true })
   name: string;
 
-  @ApiProperty({ example: 'Cleanups', description: 'Категория брифа' })
+  @ApiPropertyOptional()
+  @ApiProperty({ example: '17.01.2022_Clean up&CG.pptx', description: 'Оригинальное название брифа' })
   @Column()
-  category: string;
+  originalName: string;
+
+  @ApiProperty({ example: 'Cleanups', description: 'Категория брифа' })
+  @Column({ default: 'Common' })
+  category?: string;
+
+  @ApiProperty({ example: 'true', description: 'Утвержден или нет' })
+  @Column({ default: false })
+  approved: boolean;
 
   @ApiProperty({ example: '20220216', description: 'Дата создания брифа' })
   @CreateDateColumn()
@@ -36,10 +46,20 @@ export class Brief {
   @Column({ nullable: true })
   details?: string;
 
-  @ApiProperty({ example: '1', description: 'ID проекта' })
-  @Column()
-  projectId: number;
+  // @ApiProperty({ example: '1', description: 'ID проекта' })
+  // @Column()
+  // projectId: number;
+
+  @ApiProperty({ example: 'project***/briefs/briefName.ext', description: 'Путь до файла' })
+  @Column({ unique: true })
+  url: string;
 
   @ManyToOne(() => Project, project => project.briefs)
   project: Project;
+
+  @ManyToOne(() => User, user => user.createdBriefs)
+  createdBy: User;
+
+  @ManyToOne(() => User, user => user.updatedBriefs)
+  updatedBy: User;
 }

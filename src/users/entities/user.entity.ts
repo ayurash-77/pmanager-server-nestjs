@@ -2,6 +2,7 @@ import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColum
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Role } from '@app/roles/entities/role.entity';
 import { Project } from '@app/projects/entities/project.entity';
+import { Brief } from '@app/briefs/entities/brief.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -52,4 +53,10 @@ export class User {
 
   @OneToMany(() => Project, project => project.owner)
   projects: Project[];
+
+  @OneToMany(() => Brief, brief => brief.createdBy)
+  createdBriefs: Brief[];
+
+  @OneToMany(() => Brief, brief => brief.updatedBy)
+  updatedBriefs: Brief[];
 }
