@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Job } from '@app/jobs/entities/job.entity';
+import { Job } from '@app/jobs/job.entity';
 import { JoinTable } from 'typeorm';
 
 @Entity({ name: 'roles' })

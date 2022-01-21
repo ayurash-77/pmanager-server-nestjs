@@ -15,6 +15,7 @@ import { FilesModule } from './files/files.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { path as appPath } from 'app-root-path';
 import { BriefsModule } from './briefs/briefs.module';
+import { StatusesModule } from './statuses/statuses.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { BriefsModule } from './briefs/briefs.module';
     ProjectsModule,
     FilesModule,
     BriefsModule,
+    StatusesModule,
   ],
   providers: [AppService],
 })

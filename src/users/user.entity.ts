@@ -1,8 +1,8 @@
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Role } from '@app/roles/entities/role.entity';
-import { Project } from '@app/projects/entities/project.entity';
-import { Brief } from '@app/briefs/entities/brief.entity';
+import { Role } from '@app/roles/role.entity';
+import { Project } from '@app/projects/project.entity';
+import { Brief } from '@app/briefs/brief.entity';
 
 @Entity({ name: 'users' })
 export class User {

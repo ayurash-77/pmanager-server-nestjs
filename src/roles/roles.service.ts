@@ -1,12 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Role } from '@app/roles/entities/role.entity';
+import { Role } from '@app/roles/role.entity';
 import { CreateRoleDto } from '@app/roles/dto/create-role.dto';
 import { UpdateRoleDto } from '@app/roles/dto/update-role.dto';
 import { IsTakenField } from '@app/utils/isTakenField';
 import { AddJobDto } from '@app/roles/dto/add-job.dto';
-import { Job } from '@app/jobs/entities/job.entity';
+import { Job } from '@app/jobs/job.entity';
 
 @Injectable()
 export class RolesService {

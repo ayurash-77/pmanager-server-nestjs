@@ -3,11 +3,11 @@ import { BriefsService } from './briefs.service';
 import { CreateBriefDto } from './dto/create-brief.dto';
 import { UpdateBriefDto } from './dto/update-brief.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Brief } from '@app/briefs/entities/brief.entity';
+import { Brief } from '@app/briefs/brief.entity';
 import { AuthGuard } from '@app/users/guards/auth.guard';
 import { RoleDecorator } from '@app/roles/decorators/role.decorator';
 import { RolesGuard } from '@app/roles/guards/roles.guard';
-import { Project } from '@app/projects/entities/project.entity';
+import { Project } from '@app/projects/project.entity';
 
 @ApiTags('Брифы')
 @Controller('briefs')

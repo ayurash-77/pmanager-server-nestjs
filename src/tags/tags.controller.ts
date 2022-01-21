@@ -3,7 +3,7 @@ import { TagsService } from './tags.service';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { UpdateTagDto } from './dto/update-tag.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Tag } from './entities/tag.entity';
+import { Tag } from './tag.entity';
 import { AuthGuard } from '@app/users/guards/auth.guard';
 
 @ApiTags('Теги')

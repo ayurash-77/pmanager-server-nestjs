@@ -4,11 +4,11 @@ import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@app/users/guards/auth.guard';
-import { Project } from '@app/projects/entities/project.entity';
+import { Project } from '@app/projects/project.entity';
 import { RoleDecorator } from '@app/roles/decorators/role.decorator';
 import { RolesGuard } from '@app/roles/guards/roles.guard';
 import { UserDecorator } from '@app/users/decorators/user.decorator';
-import { User } from '@app/users/entities/user.entity';
+import { User } from '@app/users/user.entity';
 import { ProjectResponseInterface } from '@app/projects/types/projectResponse.interface';
 import { RemoveProjectResponseInterface } from '@app/projects/types/removeProjectResponse.interface';
 

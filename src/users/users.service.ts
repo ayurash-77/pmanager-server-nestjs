@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable, UnprocessableEntityException } f
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
+import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { sign } from 'jsonwebtoken';
 import { UserResponseInterface } from './types/userResponse.interface';

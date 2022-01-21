@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Job } from '@app/jobs/entities/job.entity';
+import { Job } from '@app/jobs/job.entity';
 import { CreateJobDto } from '@app/jobs/dto/create-job.dto';
 import { UpdateJobDto } from '@app/jobs/dto/update-job.dto';
 import { IsTakenField } from '@app/utils/isTakenField';

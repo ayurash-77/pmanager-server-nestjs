@@ -1,4 +1,4 @@
-import { User } from '@app/users/entities/user.entity';
+import { User } from '@app/users/user.entity';
 
 export interface UserResponseInterface extends User {
   token: string;

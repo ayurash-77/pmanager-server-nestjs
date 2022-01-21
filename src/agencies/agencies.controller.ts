@@ -4,7 +4,7 @@ import { CreateAgencyDto } from './dto/create-agency.dto';
 import { UpdateAgencyDto } from './dto/update-agency.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@app/users/guards/auth.guard';
-import { Agency } from '@app/agencies/entities/agency.entity';
+import { Agency } from '@app/agencies/agency.entity';
 import { RoleDecorator } from '@app/roles/decorators/role.decorator';
 import { RolesGuard } from '@app/roles/guards/roles.guard';
 

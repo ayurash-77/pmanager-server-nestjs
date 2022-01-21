@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Brand } from '@app/brands/entities/brand.entity';
+import { Brand } from '@app/brands/brand.entity';
 import { Repository } from 'typeorm';
 import { IsTakenField } from '@app/utils/isTakenField';
 

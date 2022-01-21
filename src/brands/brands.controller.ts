@@ -3,7 +3,7 @@ import { BrandsService } from './brands.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Brand } from '@app/brands/entities/brand.entity';
+import { Brand } from '@app/brands/brand.entity';
 import { AuthGuard } from '@app/users/guards/auth.guard';
 import { RoleDecorator } from '@app/roles/decorators/role.decorator';
 import { RolesGuard } from '@app/roles/guards/roles.guard';

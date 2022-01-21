@@ -7,8 +7,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Project } from '@app/projects/entities/project.entity';
-import { User } from '@app/users/entities/user.entity';
+import { Project } from '@app/projects/project.entity';
+import { User } from '@app/users/user.entity';
 
 @Entity({ name: 'briefs' })
 export class Brief {

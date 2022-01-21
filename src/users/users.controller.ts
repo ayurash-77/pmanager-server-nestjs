@@ -6,7 +6,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserResponseInterface } from './types/userResponse.interface';
 import { LoginUserDto } from './dto/login-user.dto';
 import { UserDecorator } from '@app/users/decorators/user.decorator';
-import { User } from '@app/users/entities/user.entity';
+import { User } from '@app/users/user.entity';
 import { AdminGuard } from '@app/users/guards/admin.guard';
 import { AdminUpdateUserDto } from '@app/users/dto/admin-update-user.dto';
 import { AuthGuard } from '@app/users/guards/auth.guard';
