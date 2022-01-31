@@ -1,7 +1,7 @@
-import { UpdateTagDto } from '@app/tags/dto/update-tag.dto';
+import { UpdateTagDto } from '@app/entities/tags/dto/update-tag.dto';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { Repository } from 'typeorm';
-import { UpdateProjectDto } from '@app/projects/dto/update-project.dto';
+import { UpdateProjectDto } from '@app/entities/projects/dto/update-project.dto';
 
 // Проверка на совпадающие поля
 export const IsTakenField = async (

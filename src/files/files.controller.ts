@@ -1,5 +1,5 @@
 import { Controller, HttpCode, Param, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
-import { AuthGuard } from '@app/users/guards/auth.guard';
+import { AuthGuard } from '@app/entities/users/guards/auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileElementResponseDto } from '@app/files/dto/fileElementResponse.dto';
 import { FilesService } from '@app/files/files.service';
