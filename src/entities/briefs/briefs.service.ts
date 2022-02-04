@@ -13,6 +13,8 @@ import { format } from 'date-fns';
 import * as path from 'path';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { BriefCategory } from '@app/entities/brief-categories/brief-category.entity';
+import { User } from '@app/entities/users/user.entity';
+import { IsTakenField } from '@app/utils/isTakenField';
 
 @Injectable()
 export class BriefsService {
@@ -31,14 +33,20 @@ export class BriefsService {
   }
 
   // Создать новый бриф
-  async create(createBriefDto: CreateBriefDto): Promise<Brief> {
+  async create(user: User, createBriefDto: CreateBriefDto): Promise<Brief> {
     const createdAt = new Date();
     const briefDate = format(createdAt, 'yyyy.MM.dd_HH-mm');
     const project = await this.projectsService.getById(createBriefDto.projectId);
     const briefDir = await this.getBriefFolder(createBriefDto.projectId);
-    const category = createBriefDto.category || 'Common';
-    const name = createBriefDto.name || `Brief_${category}_${briefDate}`;
+
+    const category = createBriefDto.categoryId
+      ? await this.briefCategoryRepository.findOne(createBriefDto.categoryId)
+      : await this.briefCategoryRepository.findOne({ where: { code: 1 } });
+
+    const name = createBriefDto.name || `Brief_${category.name}_${briefDate}`;
     const originalName = createBriefDto.originalName;
+    const ext = path.extname(createBriefDto.originalName);
+    const dstUrl = `${briefDir}/${name}${ext}`;
 
     if (await this.briefRepository.findOne({ name })) {
       throw new HttpException(`Бриф с названием '${name}' уже существует`, HttpStatus.UNPROCESSABLE_ENTITY);
@@ -49,8 +57,6 @@ export class BriefsService {
         HttpStatus.UNPROCESSABLE_ENTITY,
       );
     }
-    const ext = path.extname(createBriefDto.originalName);
-    const dstUrl = `${briefDir}/${name}${ext}`;
 
     const srcPath = `${appPath}/${createBriefDto.url}`;
     const dstPath = `${process.env.WORK_ROOT}/${dstUrl}`;
@@ -59,8 +65,11 @@ export class BriefsService {
 
     createBriefDto.name = name;
     const brief = await this.briefRepository.create(createBriefDto);
+    brief.createdBy = user;
+    brief.updatedBy = user;
     brief.project = project;
     brief.url = dstUrl;
+    brief.category = category;
     await this.briefRepository.save(brief);
 
     return brief;
@@ -74,14 +83,17 @@ export class BriefsService {
   // Получить бриф по ID
   async getById(id: number, options?: FindOneOptions): Promise<Brief> {
     const brief = await this.briefRepository.findOne(id, options);
-    const briefCategory = await this.briefCategoryRepository.find();
-    console.log(briefCategory);
+
     if (!brief) throw new HttpException(`Бриф с id=${id} не найден`, HttpStatus.NOT_FOUND);
     return brief;
   }
 
-  update(id: number, updateBriefDto: UpdateBriefDto): Promise<Brief> {
-    return `This action updates a #${id} brief` as any;
+  async update(user: User, id: number, updateBriefDto: UpdateBriefDto): Promise<Brief> {
+    const brief = await this.getById(id);
+    await IsTakenField(this.briefRepository, 'name', updateBriefDto, Brief.name, id);
+    Object.assign(brief, updateBriefDto);
+    brief.updatedBy = user;
+    return this.briefRepository.save(brief);
   }
 
   // Удалить бриф по ID

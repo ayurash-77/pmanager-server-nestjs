@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString, Max, Min } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateProjectDto {
@@ -27,6 +27,20 @@ export class CreateProjectDto {
   @ApiProperty({ example: 'Очень важный проект', description: 'Описание проекта' })
   @ApiPropertyOptional()
   details?: string;
+
+  @IsOptional()
+  @IsBoolean({ message: `highPriority' должно быть true / false` })
+  @ApiProperty({ example: 'true', description: 'Высокий приоритет' })
+  @ApiPropertyOptional()
+  highPriority?: boolean;
+
+  @IsOptional()
+  @IsInt({ message: `поле 'progress' должно быть числом` })
+  @Min(0, { message: `поле 'progress' не должно быть меньше 0` })
+  @Max(100, { message: `поле 'progress' должно быть меньше 100` })
+  @ApiProperty({ example: '50%', description: 'Прогресс' })
+  @ApiPropertyOptional()
+  progress?: number;
 
   @IsOptional()
   @IsString({ message: `поле 'image' должно быть строкой` })

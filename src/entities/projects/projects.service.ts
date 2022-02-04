@@ -14,12 +14,14 @@ import { ProjectDateInterface } from '@app/entities/projects/types/projectDate.i
 import { RemoveProjectResponseInterface } from '@app/entities/projects/types/removeProjectResponse.interface';
 import * as fse from 'fs-extra';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
+import { StatusesService } from '@app/entities/statuses/statuses.service';
 
 @Injectable()
 export class ProjectsService {
   constructor(
     @InjectRepository(Project) public projectsRepository: Repository<Project>,
     private filesService: FilesService,
+    private statusesService: StatusesService,
   ) {}
 
   buildProjectResponse(project: Project): ProjectResponseInterface {
@@ -78,7 +80,10 @@ export class ProjectsService {
       await fse.ensureDir(`${process.env.WORK_ROOT}/${homeDir}`);
       await this.addProjectImage(project.homeDir, createProjectDto.image);
 
+      const status = await this.statusesService.getByCode(1);
       project.owner = user;
+      project.status = status;
+
       return await this.projectsRepository.save(project);
     }
   }
@@ -104,6 +109,8 @@ export class ProjectsService {
   async getById(id: number, options?: FindOneOptions): Promise<Project | null> {
     const project = await this.projectsRepository.findOne(id, options);
     if (!project) throw new HttpException(`Проект с id=${id} не найден`, HttpStatus.NOT_FOUND);
+    // const dateStr = format(project.createdAt, 'yyyy.MM.dd');
+    // console.log(dateStr);
     return project;
   }
 

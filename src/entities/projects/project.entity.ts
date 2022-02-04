@@ -10,6 +10,7 @@ import {
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { User } from '@app/entities/users/user.entity';
 import { Brief } from '@app/entities/briefs/brief.entity';
+import { Status } from '@app/entities/statuses/status.entity';
 
 @Entity({ name: 'projects' })
 export class Project {
@@ -55,9 +56,22 @@ export class Project {
   @Column({ nullable: true })
   details?: string;
 
+  @ApiProperty({ example: 'true', description: 'Высокий приоритет' })
+  @ApiPropertyOptional()
+  @Column({ default: false })
+  highPriority: boolean;
+
+  @ApiProperty({ example: '50%', description: 'Прогресс' })
+  @ApiPropertyOptional()
+  @Column({ default: 0 })
+  progress: number;
+
   @ManyToOne(() => User, user => user.projects, { eager: true })
   owner: User;
 
   @OneToMany(() => Brief, brief => brief.project)
   briefs: Brief[];
+
+  @ManyToOne(() => Status, status => status.projects)
+  status: Status;
 }

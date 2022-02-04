@@ -13,21 +13,11 @@ export class CreateBriefDto {
   @ApiProperty({ example: '17.01.2022_Clean up&CG.pptx', description: 'Оригинальное название брифа' })
   originalName: string;
 
-  @IsString({ message: `поле 'category' должно быть строкой` })
-  @IsOptional()
-  @ApiProperty({ example: 'Cleanups', description: 'Категория брифа' })
-  @ApiPropertyOptional()
-  category?: string;
-
   @IsBoolean()
   @IsOptional()
   @ApiProperty({ example: 'true', description: 'Утвержден или нет' })
   @ApiPropertyOptional()
   approved?: boolean;
-
-  @ApiProperty({ example: '1', description: 'ID проекта' })
-  @IsNumber()
-  projectId: number;
 
   @IsNotEmpty({ message: `поле 'file' не может быть пустым` })
   @IsString({ message: `поле 'file' должно быть строкой` })
@@ -39,4 +29,15 @@ export class CreateBriefDto {
   @ApiProperty({ example: 'Бриф на клинапы', description: 'Описание брифа' })
   @ApiPropertyOptional()
   details?: string;
+
+  @IsNumber({}, { message: `поле 'categoryId' должно быть числом` })
+  @IsOptional()
+  @ApiProperty({ example: '1', description: 'ID категории брифа' })
+  @ApiPropertyOptional()
+  categoryId?: number;
+
+  @IsNumber({}, { message: `поле 'projectId' должно быть числом` })
+  @ApiProperty({ example: '1', description: 'ID проекта' })
+  @IsNumber()
+  projectId: number;
 }

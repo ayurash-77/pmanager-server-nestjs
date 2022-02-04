@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Brief } from '@app/entities/briefs/brief.entity';
 
 @Entity({ name: 'briefCategory' })
 export class BriefCategory {
@@ -19,4 +20,7 @@ export class BriefCategory {
   @ApiPropertyOptional()
   @Column({ nullable: true })
   details?: string;
+
+  @OneToMany(() => Brief, brief => brief.category)
+  briefs: Brief[];
 }

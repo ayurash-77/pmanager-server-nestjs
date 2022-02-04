@@ -9,6 +9,7 @@ import {
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Project } from '@app/entities/projects/project.entity';
 import { User } from '@app/entities/users/user.entity';
+import { BriefCategory } from '@app/entities/brief-categories/brief-category.entity';
 
 @Entity({ name: 'briefs' })
 export class Brief {
@@ -24,10 +25,6 @@ export class Brief {
   @ApiProperty({ example: '17.01.2022_Clean up&CG.pptx', description: 'Оригинальное название брифа' })
   @Column()
   originalName: string;
-
-  @ApiProperty({ example: 'Cleanups', description: 'Категория брифа' })
-  @Column({ default: 'Common' })
-  category?: string;
 
   @ApiProperty({ example: 'true', description: 'Утвержден или нет' })
   @Column({ default: false })
@@ -46,15 +43,11 @@ export class Brief {
   @Column({ nullable: true })
   details?: string;
 
-  // @ApiProperty({ example: '1', description: 'ID проекта' })
-  // @Column()
-  // projectId: number;
-
   @ApiProperty({ example: 'project***/briefs/briefName.ext', description: 'Путь до файла' })
   @Column({ unique: true })
   url: string;
 
-  @ManyToOne(() => Project, project => project.briefs)
+  @ManyToOne(() => Project, project => project.briefs, { onDelete: 'CASCADE' })
   project: Project;
 
   @ManyToOne(() => User, user => user.createdBriefs)
@@ -62,4 +55,7 @@ export class Brief {
 
   @ManyToOne(() => User, user => user.updatedBriefs)
   updatedBy: User;
+
+  @ManyToOne(() => BriefCategory, briefCategory => briefCategory.briefs)
+  category: BriefCategory;
 }

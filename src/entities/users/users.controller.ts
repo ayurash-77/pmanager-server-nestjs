@@ -48,7 +48,7 @@ export class UsersController {
   @Get('users')
   @ApiOperation({ summary: 'Получить всех пользователей' })
   @ApiResponse({ status: 200, type: [User] })
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   async getAll(): Promise<User[]> {
     return await this.usersService.getAll();
   }

@@ -12,7 +12,7 @@ export class BriefCategoriesService {
   constructor(@InjectRepository(BriefCategory) public briefCategoryRepo: Repository<BriefCategory>) {}
 
   // Создать новую категорию брифа
-  async createCategory(dto: CreateBriefCategoryDto): Promise<BriefCategory> {
+  async create(dto: CreateBriefCategoryDto): Promise<BriefCategory> {
     await IsTakenField(this.briefCategoryRepo, 'name', dto, BriefCategory.name);
     await IsTakenField(this.briefCategoryRepo, 'code', dto, BriefCategory.name);
     const category = await this.briefCategoryRepo.create(dto);

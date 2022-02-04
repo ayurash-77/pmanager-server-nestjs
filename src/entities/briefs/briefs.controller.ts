@@ -7,6 +7,8 @@ import { Brief } from '@app/entities/briefs/brief.entity';
 import { AuthGuard } from '@app/entities/users/guards/auth.guard';
 import { RoleDecorator } from '@app/entities/roles/decorators/role.decorator';
 import { RolesGuard } from '@app/entities/roles/guards/roles.guard';
+import { UserDecorator } from '@app/entities/users/decorators/user.decorator';
+import { User } from '@app/entities/users/user.entity';
 
 @ApiTags('Брифы')
 @Controller('briefs')
@@ -20,8 +22,8 @@ export class BriefsController {
   @Post()
   @ApiOperation({ summary: 'Создать новый бриф' })
   @ApiResponse({ status: 200, type: Brief })
-  create(@Body() createBriefDto: CreateBriefDto): Promise<Brief> {
-    return this.briefsService.create(createBriefDto);
+  create(@UserDecorator() user: User, @Body() createBriefDto: CreateBriefDto): Promise<Brief> {
+    return this.briefsService.create(user, createBriefDto);
   }
 
   // Получить все брифы
@@ -42,8 +44,12 @@ export class BriefsController {
 
   // Изменить бриф по ID
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBriefDto: UpdateBriefDto): Promise<Brief> {
-    return this.briefsService.update(+id, updateBriefDto);
+  update(
+    @UserDecorator() user: User,
+    @Param('id') id: string,
+    @Body() updateBriefDto: UpdateBriefDto,
+  ): Promise<Brief> {
+    return this.briefsService.update(user, +id, updateBriefDto);
   }
 
   // Удалить бриф по ID

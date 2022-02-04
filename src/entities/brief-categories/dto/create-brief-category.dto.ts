@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateBriefCategoryDto {
@@ -8,7 +8,8 @@ export class CreateBriefCategoryDto {
   name: string;
 
   @IsNotEmpty({ message: `code' не может быть пустым` })
-  @IsNumber({}, { message: `поле 'code' должно быть числом` })
+  @IsInt({ message: `поле 'code' должно быть числом` })
+  @Min(1, { message: `поле 'code' должно быть больше 0` })
   @ApiProperty({ example: 'Cleanups', description: 'Название категории брифа' })
   code: number;
 

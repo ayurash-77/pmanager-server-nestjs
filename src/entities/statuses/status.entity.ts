@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Project } from '@app/entities/projects/project.entity';
 
 @Entity({ name: 'statuses' })
 export class Status {
@@ -19,4 +20,7 @@ export class Status {
   @ApiPropertyOptional()
   @Column({ unique: true })
   details?: string;
+
+  @OneToMany(() => Project, project => project.status)
+  projects: Project[];
 }

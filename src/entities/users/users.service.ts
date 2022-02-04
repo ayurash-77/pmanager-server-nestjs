@@ -41,7 +41,7 @@ export class UsersService {
   }
 
   buildRemoveUserResponse(user: User): RemoveUserResponseInterface {
-    return { user, message: `Пользователь '${user.username}' удален.` };
+    return { user, message: `User '${user.username}' deleted.` };
   }
   // Авторизация
   async login(userLoginDto: LoginUserDto): Promise<User> {
@@ -49,15 +49,12 @@ export class UsersService {
       where: [{ email: userLoginDto.username }, { username: userLoginDto.username }],
       select: ['id', 'email', 'password', 'isAdmin', 'username', 'name', 'surname', 'phone', 'image'],
     });
-    if (!user) {
-      throw new UnprocessableEntityException(`Пользователь '${userLoginDto.username}' не найден`);
+    // const passwordCorrect = await compare(userLoginDto.password, user.password);
+    if (user && (await compare(userLoginDto.password, user.password))) {
+      delete user.password;
+      return user;
     }
-    const isPasswordCorrect = await compare(userLoginDto.password, user.password);
-    if (!isPasswordCorrect) {
-      throw new UnprocessableEntityException('Password incorrect');
-    }
-    delete user.password;
-    return user;
+    throw new UnprocessableEntityException('Username or password incorrect');
   }
 
   // Хеширование
@@ -103,7 +100,7 @@ export class UsersService {
   // Получить пользователя по ID
   async getById(id: number): Promise<User | null> {
     const user = await this.repo.findOne(id, { relations: ['roles'] });
-    if (!user) throw new HttpException(`Пользователь с ID=${id} не найден`, HttpStatus.NOT_FOUND);
+    if (!user) throw new HttpException(`User with ID=${id} not found`, HttpStatus.NOT_FOUND);
     return user;
   }
 

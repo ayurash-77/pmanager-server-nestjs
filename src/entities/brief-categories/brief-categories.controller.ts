@@ -19,10 +19,10 @@ export class BriefCategoriesController {
 
   // Создать новую категорию брифа
   @Post()
-  @ApiOperation({ summary: 'Создать новый бриф' })
+  @ApiOperation({ summary: 'Создать новую категорию брифа' })
   @ApiResponse({ status: 200, type: Brief })
   createCategory(@Body() dto: CreateBriefCategoryDto): Promise<BriefCategory> {
-    return this.briefCategoriesService.createCategory(dto);
+    return this.briefCategoriesService.create(dto);
   }
 
   // Получить все категории брифов
