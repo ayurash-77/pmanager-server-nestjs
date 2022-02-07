@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Project } from '@app/entities/projects/project.entity';
 
 @Entity({ name: 'brands' })
 export class Brand {
@@ -15,4 +16,7 @@ export class Brand {
   @ApiProperty({ example: 'Фруктовый сад', description: 'Альтернативное имя брэнда' })
   @Column({ nullable: true })
   altName?: string;
+
+  @OneToMany(() => Project, project => project.brand)
+  projects: Project[];
 }

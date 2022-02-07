@@ -27,6 +27,12 @@ export class ProjectsService {
   buildProjectResponse(project: Project): ProjectResponseInterface {
     return {
       ...project,
+      // status: {
+      //   id: project.status.id,
+      //   code: project.status.code,
+      //   name: project.status.name,
+      //   projects: project.status.projects
+      // },
       owner: {
         id: project.owner.id,
         username: project.owner.username,

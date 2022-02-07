@@ -11,6 +11,9 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { User } from '@app/entities/users/user.entity';
 import { Brief } from '@app/entities/briefs/brief.entity';
 import { Status } from '@app/entities/statuses/status.entity';
+import { Brand } from '@app/entities/brands/brand.entity';
+import { Agency } from '@app/entities/agencies/agency.entity';
+import { Client } from '@app/entities/clients/client.entity';
 
 @Entity({ name: 'projects' })
 export class Project {
@@ -72,6 +75,15 @@ export class Project {
   @OneToMany(() => Brief, brief => brief.project)
   briefs: Brief[];
 
-  @ManyToOne(() => Status, status => status.projects)
+  @ManyToOne(() => Status, status => status.projects, { eager: true })
   status: Status;
+
+  @ManyToOne(() => Brand, brand => brand.projects, { eager: true })
+  brand: Brand;
+
+  @ManyToOne(() => Client, client => client.projects, { eager: true })
+  client: Client;
+
+  @ManyToOne(() => Agency, agency => agency.projects, { eager: true })
+  agency: Agency;
 }
