@@ -6,14 +6,14 @@ import { CreateBriefCategoryDto } from '@app/entities/brief-categories/dto/creat
 import { BriefCategory } from '@app/entities/brief-categories/brief-category.entity';
 import { UpdateBriefCategoryDto } from '@app/entities/brief-categories/dto/update-brief-category.dto';
 import { AuthGuard } from '@app/entities/users/guards/auth.guard';
-import { RoleDecorator } from '@app/entities/roles/decorators/role.decorator';
-import { RolesGuard } from '@app/entities/roles/guards/roles.guard';
+// import { RoleDecorator } from '@app/entities/roles/decorators/role.decorator';
+// import { RolesGuard } from '@app/entities/roles/guards/roles.guard';
 
 @ApiTags('Категории брифов')
 @Controller('brief-categories')
 @UseGuards(AuthGuard)
-@RoleDecorator('Producer', 'Art director', 'Manager')
-@UseGuards(RolesGuard)
+// @RoleDecorator('Producer', 'Art director', 'Manager')
+// @UseGuards(RolesGuard)
 export class BriefCategoriesController {
   constructor(private readonly briefCategoriesService: BriefCategoriesService) {}
 

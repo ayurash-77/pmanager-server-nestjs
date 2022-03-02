@@ -1,3 +1,6 @@
+import * as fs from 'fs';
+import { path as appPath } from 'app-root-path';
+
 if (process.env.NODE_ENV == 'env-prod') {
   require('module-alias/register');
 }
@@ -17,7 +20,13 @@ if (process.env.NODE_ENV == 'env-dev') {
 }
 
 async function bootstrap() {
+  const httpsOptions = {
+    cert: fs.readFileSync(`${appPath}/secrets/certificate1.pem`),
+    key: fs.readFileSync(`${appPath}/secrets/certificate1_key.pem`),
+  };
   const app = await NestFactory.create(AppModule, {
+    // httpsOptions,
+    cors: true,
     logger: ['error', 'warn'],
   });
 
@@ -29,7 +38,7 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/api/docs', app, document);
-  // app.setGlobalPrefix('api');
+  // app.setGlobalPrefix('/api');
   app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(PORT);

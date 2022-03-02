@@ -1,4 +1,4 @@
-import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsBoolean, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Max, Min } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateProjectDto {
@@ -50,4 +50,10 @@ export class CreateProjectDto {
   })
   @ApiPropertyOptional()
   image?: string;
+
+  @IsNumber({}, { message: `поле 'brandId' должно быть числом` })
+  @IsOptional()
+  @ApiProperty({ example: '1', description: 'ID брэнда' })
+  @ApiPropertyOptional()
+  brandId?: number;
 }

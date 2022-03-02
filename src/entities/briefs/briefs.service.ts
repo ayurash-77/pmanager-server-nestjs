@@ -43,20 +43,24 @@ export class BriefsService {
       ? await this.briefCategoryRepository.findOne(createBriefDto.categoryId)
       : await this.briefCategoryRepository.findOne({ where: { code: 1 } });
 
-    const name = createBriefDto.name || `Brief_${category.name}_${briefDate}`;
+    const name = createBriefDto.name || `Brief_${category.name}`;
+    const filename = `${name}_${briefDate}`;
     const originalName = createBriefDto.originalName;
     const ext = path.extname(createBriefDto.originalName);
-    const dstUrl = `${briefDir}/${name}${ext}`;
+    const dstUrl = `${briefDir}/${filename}${ext}`;
 
-    if (await this.briefRepository.findOne({ name })) {
-      throw new HttpException(`Бриф с названием '${name}' уже существует`, HttpStatus.UNPROCESSABLE_ENTITY);
-    }
-    if (await this.briefRepository.findOne({ originalName })) {
+    if (await this.briefRepository.findOne({ filename })) {
       throw new HttpException(
-        `Бриф с исходным именем файла '${originalName}' уже существует`,
+        `Бриф с названием '${name}' и датой '${briefDate}' уже существует`,
         HttpStatus.UNPROCESSABLE_ENTITY,
       );
     }
+    // if (await this.briefRepository.findOne({ originalName })) {
+    //   throw new HttpException(
+    //     `Бриф с исходным именем файла '${originalName}' уже существует`,
+    //     HttpStatus.UNPROCESSABLE_ENTITY,
+    //   );
+    // }
 
     const srcPath = `${appPath}/${createBriefDto.url}`;
     const dstPath = `${process.env.WORK_ROOT}/${dstUrl}`;
@@ -66,6 +70,8 @@ export class BriefsService {
     createBriefDto.name = name;
     const brief = await this.briefRepository.create(createBriefDto);
     brief.createdBy = user;
+    brief.filename = filename;
+    brief.originalName = originalName;
     brief.updatedBy = user;
     brief.project = project;
     brief.url = dstUrl;

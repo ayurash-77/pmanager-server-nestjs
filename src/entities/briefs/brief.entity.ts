@@ -18,8 +18,12 @@ export class Brief {
   id: number;
 
   @ApiProperty({ example: 'Cleanups_v01', description: 'Название брифа' })
-  @Column({ unique: true })
+  @Column()
   name: string;
+
+  @ApiProperty({ example: 'Cleanups_v01', description: 'Название брифа' })
+  @Column({ nullable: true })
+  filename?: string;
 
   @ApiPropertyOptional()
   @ApiProperty({ example: '17.01.2022_Clean up&CG.pptx', description: 'Оригинальное название брифа' })
@@ -43,6 +47,10 @@ export class Brief {
   @Column({ nullable: true })
   details?: string;
 
+  @Column()
+  @ApiProperty({ example: '1', description: 'id проекта' })
+  projectId: number;
+
   @ApiProperty({ example: 'project***/briefs/briefName.ext', description: 'Путь до файла' })
   @Column({ unique: true })
   url: string;
@@ -50,12 +58,12 @@ export class Brief {
   @ManyToOne(() => Project, project => project.briefs, { onDelete: 'CASCADE' })
   project: Project;
 
-  @ManyToOne(() => User, user => user.createdBriefs)
+  @ManyToOne(() => User, user => user.createdBriefs, { eager: true })
   createdBy: User;
 
-  @ManyToOne(() => User, user => user.updatedBriefs)
+  @ManyToOne(() => User, user => user.updatedBriefs, { eager: true })
   updatedBy: User;
 
-  @ManyToOne(() => BriefCategory, briefCategory => briefCategory.briefs)
+  @ManyToOne(() => BriefCategory, briefCategory => briefCategory.briefs, { eager: true })
   category: BriefCategory;
 }

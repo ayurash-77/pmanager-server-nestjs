@@ -15,6 +15,7 @@ import { RemoveProjectResponseInterface } from '@app/entities/projects/types/rem
 import * as fse from 'fs-extra';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { StatusesService } from '@app/entities/statuses/statuses.service';
+import { BrandsService } from '@app/entities/brands/brands.service';
 
 @Injectable()
 export class ProjectsService {
@@ -22,17 +23,12 @@ export class ProjectsService {
     @InjectRepository(Project) public projectsRepository: Repository<Project>,
     private filesService: FilesService,
     private statusesService: StatusesService,
+    private brandsService: BrandsService,
   ) {}
 
   buildProjectResponse(project: Project): ProjectResponseInterface {
     return {
       ...project,
-      // status: {
-      //   id: project.status.id,
-      //   code: project.status.code,
-      //   name: project.status.name,
-      //   projects: project.status.projects
-      // },
       owner: {
         id: project.owner.id,
         username: project.owner.username,
@@ -87,6 +83,10 @@ export class ProjectsService {
       await this.addProjectImage(project.homeDir, createProjectDto.image);
 
       const status = await this.statusesService.getByCode(1);
+      if (createProjectDto.brandId) {
+        project.brand = await this.brandsService.getById(createProjectDto.brandId);
+      }
+
       project.owner = user;
       project.status = status;
 
@@ -108,7 +108,7 @@ export class ProjectsService {
   // Получить все проекты
   async getAll(): Promise<Project[]> {
     // return await this.projectsRepository.find({ relations: ['owner'] });
-    return await this.projectsRepository.find();
+    return await this.projectsRepository.find({ order: { title: 'ASC' } });
   }
 
   // Получить проект по ID

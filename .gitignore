@@ -41,3 +41,5 @@ lerna-debug.log*
 /upload/*
 /src/seeds/*
 /src/ormconfig.ts
+/secrets
+/src/secrets

@@ -1,4 +1,14 @@
-import { Controller, HttpCode, Param, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  HttpCode,
+  Param,
+  Post,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AuthGuard } from '@app/entities/users/guards/auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileElementResponseDto } from '@app/files/dto/fileElementResponse.dto';
@@ -45,5 +55,12 @@ export class FilesController {
     }
     const newMediaFile = new MediaFile({ originalname: newOriginalname, buffer: newBuffer }, category);
     return this.filesService.saveFile(newMediaFile);
+  }
+
+  // Delete File
+  @Delete('')
+  async removeFile(@Body() dto: { url: string }) {
+    return this.filesService.remove(dto.url);
+    // return path;
   }
 }

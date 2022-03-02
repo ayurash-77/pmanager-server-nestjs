@@ -5,16 +5,16 @@ import { UpdateBriefDto } from './dto/update-brief.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Brief } from '@app/entities/briefs/brief.entity';
 import { AuthGuard } from '@app/entities/users/guards/auth.guard';
-import { RoleDecorator } from '@app/entities/roles/decorators/role.decorator';
-import { RolesGuard } from '@app/entities/roles/guards/roles.guard';
+// import { RoleDecorator } from '@app/entities/roles/decorators/role.decorator';
+// import { RolesGuard } from '@app/entities/roles/guards/roles.guard';
 import { UserDecorator } from '@app/entities/users/decorators/user.decorator';
 import { User } from '@app/entities/users/user.entity';
 
 @ApiTags('Брифы')
 @Controller('briefs')
 @UseGuards(AuthGuard)
-@RoleDecorator('Producer', 'Art director', 'Manager')
-@UseGuards(RolesGuard)
+// @RoleDecorator('Producer', 'Art director', 'Manager')
+// @UseGuards(RolesGuard)
 export class BriefsController {
   constructor(private readonly briefsService: BriefsService) {}
 

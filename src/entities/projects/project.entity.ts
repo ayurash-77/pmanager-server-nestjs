@@ -72,7 +72,7 @@ export class Project {
   @ManyToOne(() => User, user => user.projects, { eager: true })
   owner: User;
 
-  @OneToMany(() => Brief, brief => brief.project)
+  @OneToMany(() => Brief, brief => brief.project, { eager: true })
   briefs: Brief[];
 
   @ManyToOne(() => Status, status => status.projects, { eager: true })
