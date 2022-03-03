@@ -15,6 +15,7 @@ import { FileElementResponseDto } from '@app/files/dto/fileElementResponse.dto';
 import { FilesService } from '@app/files/files.service';
 import { MediaFile } from '@app/files/types/mediaFile';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { DeleteFileDto } from '@app/files/dto/delete-file.dto';
 
 @ApiTags('Файлы')
 @Controller('files')
@@ -57,10 +58,11 @@ export class FilesController {
     return this.filesService.saveFile(newMediaFile);
   }
 
-  // Delete File
+  // Delete file
   @Delete('')
-  async removeFile(@Body() dto: { url: string }) {
-    return this.filesService.remove(dto.url);
-    // return path;
+  @ApiOperation({ summary: 'Удалить файл' })
+  // @ApiResponse({ status: 200, type: FileElementResponseDto })
+  remove(@Body() deleteFileDto: DeleteFileDto): Promise<void> {
+    return this.filesService.remove(deleteFileDto.url);
   }
 }

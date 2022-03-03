@@ -47,7 +47,7 @@ export class User {
   image?: string;
 
   // @ManyToMany(() => Role, { eager: true })
-  @ManyToMany(() => Role)
+  @ManyToMany(() => Role, { eager: true })
   @JoinTable({ name: 'users_roles' })
   roles: Role[];
 

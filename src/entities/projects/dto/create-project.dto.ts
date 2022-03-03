@@ -56,4 +56,16 @@ export class CreateProjectDto {
   @ApiProperty({ example: '1', description: 'ID брэнда' })
   @ApiPropertyOptional()
   brandId?: number;
+
+  @IsNumber({}, { message: `поле 'clientId' должно быть числом` })
+  @IsOptional()
+  @ApiProperty({ example: '1', description: 'ID клиента' })
+  @ApiPropertyOptional()
+  clientId?: number;
+
+  @IsNumber({}, { message: `поле 'agencyId' должно быть числом` })
+  @IsOptional()
+  @ApiProperty({ example: '1', description: 'ID агенства' })
+  @ApiPropertyOptional()
+  agencyId?: number;
 }

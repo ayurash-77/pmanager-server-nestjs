@@ -72,24 +72,24 @@ export class ProjectsService {
   }
 
   // Создать новый проект
-  async create(user: User, createProjectDto: CreateProjectDto): Promise<Project> {
-    const homeDir = await this.getHomeDir(createProjectDto, new Date());
+  async create(user: User, dto: CreateProjectDto): Promise<Project> {
+    const homeDir = await this.getHomeDir(dto, new Date());
 
     if (homeDir) {
-      const project = await this.projectsRepository.create(createProjectDto);
+      const project = await this.projectsRepository.create(dto);
       project.homeDir = homeDir;
 
       await fse.ensureDir(`${process.env.WORK_ROOT}/${homeDir}`);
-      await this.addProjectImage(project.homeDir, createProjectDto.image);
+      await this.addProjectImage(project.homeDir, dto.image);
 
       const status = await this.statusesService.getByCode(1);
-      if (createProjectDto.brandId) {
-        project.brand = await this.brandsService.getById(createProjectDto.brandId);
-      }
+
+      if (dto.brandId) project.brand = await this.brandsService.getById(dto.brandId);
+      if (dto.clientId) project.client = await this.brandsService.getById(dto.clientId);
+      if (dto.agencyId) project.agency = await this.brandsService.getById(dto.agencyId);
 
       project.owner = user;
       project.status = status;
-
       return await this.projectsRepository.save(project);
     }
   }
