@@ -3,6 +3,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Role } from '@app/entities/roles/role.entity';
 import { Project } from '@app/entities/projects/project.entity';
 import { Brief } from '@app/entities/briefs/brief.entity';
+import { Post } from '@app/entities/posts/post.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -59,4 +60,7 @@ export class User {
 
   @OneToMany(() => Brief, brief => brief.updatedBy)
   updatedBriefs: Brief[];
+
+  @OneToMany(() => Post, post => post.createdBy)
+  createdPosts: Post[];
 }

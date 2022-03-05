@@ -14,6 +14,7 @@ import { Status } from '@app/entities/statuses/status.entity';
 import { Brand } from '@app/entities/brands/brand.entity';
 import { Agency } from '@app/entities/agencies/agency.entity';
 import { Client } from '@app/entities/clients/client.entity';
+import { Post } from '@app/entities/posts/post.entity';
 
 @Entity({ name: 'projects' })
 export class Project {
@@ -86,4 +87,7 @@ export class Project {
 
   @ManyToOne(() => Agency, agency => agency.projects, { eager: true })
   agency: Agency;
+
+  @OneToMany(() => Post, post => post.project, { eager: true })
+  posts: Post[];
 }

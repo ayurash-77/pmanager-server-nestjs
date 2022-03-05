@@ -18,11 +18,11 @@ export class JobsController {
     return this.jobsService.create(createJobDto);
   }
 
-  // Получить все тип работи
+  // Получить все тип работ
   @Get()
-  @ApiOperation({ summary: 'Получить все тип работи' })
+  @ApiOperation({ summary: 'Получить все тип работ' })
   @ApiResponse({ status: 200, type: [Job] })
-  getAll() {
+  getAll(): Promise<Job[]> {
     return this.jobsService.getAll();
   }
 
@@ -30,7 +30,7 @@ export class JobsController {
   @Get(':id')
   @ApiOperation({ summary: 'Получить тип работ по ID' })
   @ApiResponse({ status: 200, type: Job })
-  getById(@Param('id') id: string) {
+  getById(@Param('id') id: string): Promise<Job> {
     return this.jobsService.getById(+id);
   }
 
@@ -46,7 +46,7 @@ export class JobsController {
   @Delete(':id')
   @ApiOperation({ summary: 'Удалить тип работ по ID' })
   @ApiResponse({ status: 200, type: Job })
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: string): Promise<Job> {
     return this.jobsService.remove(+id);
   }
 }

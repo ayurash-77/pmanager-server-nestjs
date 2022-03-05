@@ -8,23 +8,23 @@ import { IsTakenField } from '@app/utils/isTakenField';
 
 @Injectable()
 export class JobsService {
-  constructor(@InjectRepository(Job) public jobRepository: Repository<Job>) {}
+  constructor(@InjectRepository(Job) public jobRepo: Repository<Job>) {}
 
   // Создать новый тип работ
   async create(createJobDto: CreateJobDto): Promise<Job> {
-    await IsTakenField(this.jobRepository, 'name', createJobDto, Job.name);
-    const job = this.jobRepository.create(createJobDto);
-    return await this.jobRepository.save(job);
+    await IsTakenField(this.jobRepo, 'name', createJobDto, Job.name);
+    const job = this.jobRepo.create(createJobDto);
+    return await this.jobRepo.save(job);
   }
 
   // Получить все типы работ
   async getAll(): Promise<Job[]> {
-    return await this.jobRepository.find();
+    return await this.jobRepo.find();
   }
 
   // Получить тип работ по ID
   async getById(id: number): Promise<Job | null> {
-    const job = await this.jobRepository.findOne(id);
+    const job = await this.jobRepo.findOne(id);
     if (!job) throw new HttpException(`Тип работ с id=${id} не найден`, HttpStatus.NOT_FOUND);
     return job;
   }
@@ -32,14 +32,14 @@ export class JobsService {
   // Изменить тип работ по ID
   async update(id: number, updateJobDto: UpdateJobDto): Promise<Job> {
     const job = await this.getById(id);
-    await IsTakenField(this.jobRepository, 'name', updateJobDto, Job.name, id);
+    await IsTakenField(this.jobRepo, 'name', updateJobDto, Job.name, id);
     Object.assign(job, updateJobDto);
-    return this.jobRepository.save(job);
+    return this.jobRepo.save(job);
   }
 
   // Удалить тип работ по ID
   async remove(id: number): Promise<Job> {
     const job = await this.getById(id);
-    return this.jobRepository.remove(job);
+    return this.jobRepo.remove(job);
   }
 }
