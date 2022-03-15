@@ -38,7 +38,7 @@ export class Post {
   @ApiPropertyOptional()
   updatedAt?: Date;
 
-  @ManyToOne(() => User, user => user.createdBriefs, { eager: true })
+  @ManyToOne(() => User, user => user.createdPosts, { eager: true })
   createdBy: User;
 
   @ManyToMany(() => User, { eager: true })

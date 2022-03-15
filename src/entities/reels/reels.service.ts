@@ -1,26 +1,46 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateReelDto } from './dto/create-reel.dto';
 import { UpdateReelDto } from './dto/update-reel.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Reel } from '@app/entities/reels/reel.entity';
+import { Repository } from 'typeorm';
+import { IsTakenField } from '@app/utils/isTakenField';
+import { User } from '@app/entities/users/user.entity';
 
 @Injectable()
 export class ReelsService {
-  create(createReelDto: CreateReelDto) {
-    return 'This action adds a new reel';
+  constructor(@InjectRepository(Reel) public reelsRepo: Repository<Reel>) {}
+
+  // Создать новый ролик
+  async create(user: User, createReelDto: CreateReelDto): Promise<Reel> {
+    const reel = this.reelsRepo.create(createReelDto);
+    reel.createdBy = user;
+    return await this.reelsRepo.save(reel);
   }
 
-  findAll() {
-    return `This action returns all reels`;
+  // Получить все ролики
+  async getAll(): Promise<Reel[]> {
+    return await this.reelsRepo.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} reel`;
+  // Получить ролик по ID
+  async getById(id: number): Promise<Reel | null> {
+    const reel = await this.reelsRepo.findOne(id);
+    if (!reel) throw new HttpException(`Ролик с id=${id} не найден`, HttpStatus.NOT_FOUND);
+    return reel;
   }
 
-  update(id: number, updateReelDto: UpdateReelDto) {
-    return `This action updates a #${id} reel`;
+  // Изменить ролик по ID
+  async update(id: number, updateReelDto: UpdateReelDto): Promise<Reel> {
+    const reel = await this.getById(id);
+    // await IsTakenField(this.reelsRepo, 'name', updateReelDto, Reel.name, id);
+    Object.assign(reel, updateReelDto);
+    return this.reelsRepo.save(reel);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} reel`;
+  // Удалить ролик по ID
+  async remove(id: number): Promise<Reel> {
+    const reel = await this.getById(id);
+    return this.reelsRepo.remove(reel);
   }
 }

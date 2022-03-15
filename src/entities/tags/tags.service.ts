@@ -31,7 +31,8 @@ export class TagsService {
 
   // Получить массив тегов по массиву ID
   async getByIds(ids: number[]): Promise<Tag[]> {
-    return await this.repo.findByIds(ids);
+    if (ids) return await this.repo.findByIds(ids);
+    return null;
   }
 
   // Изменить тег по ID

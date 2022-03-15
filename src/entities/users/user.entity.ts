@@ -4,6 +4,7 @@ import { Role } from '@app/entities/roles/role.entity';
 import { Project } from '@app/entities/projects/project.entity';
 import { Brief } from '@app/entities/briefs/brief.entity';
 import { Post } from '@app/entities/posts/post.entity';
+import { Reel } from '@app/entities/reels/reel.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -63,4 +64,7 @@ export class User {
 
   @OneToMany(() => Post, post => post.createdBy)
   createdPosts: Post[];
+
+  @OneToMany(() => Post, post => post.createdBy)
+  createdReels: Reel[];
 }

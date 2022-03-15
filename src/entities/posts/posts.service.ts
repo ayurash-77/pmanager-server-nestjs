@@ -21,8 +21,9 @@ export class PostsService {
     const post = await this.postRepo.create(dto);
     const project = await this.projectsService.getById(dto.projectId);
     const tags = await this.tagsService.getByIds(dto.tagsIds);
+
+    if (tags) post.tags = tags;
     post.createdBy = user;
-    post.tags = tags;
     post.project = project;
     return await this.postRepo.save(post);
   }
