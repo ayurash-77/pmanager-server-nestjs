@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
 import { ReelsService } from './reels.service';
 import { CreateReelDto } from './dto/create-reel.dto';
 import { UpdateReelDto } from './dto/update-reel.dto';
@@ -30,8 +30,16 @@ export class ReelsController {
   @Get()
   @ApiOperation({ summary: 'Получить все Ролики' })
   @ApiResponse({ status: 200, type: [Reel] })
-  getAll() {
-    return this.reelsService.getAll();
+  getAll(@Query('projectId') projectId?: string) {
+    return this.reelsService.getAll(+projectId);
+  }
+
+  // Получить все Ролики проекта
+  @Get('projects/:id')
+  @ApiOperation({ summary: 'Получить все Ролики проекта' })
+  @ApiResponse({ status: 200, type: [Reel] })
+  getAllByProjectId(@Param('id') id: string) {
+    return this.reelsService.getAllByProjectId(+id);
   }
 
   // Получить Ролик по ID

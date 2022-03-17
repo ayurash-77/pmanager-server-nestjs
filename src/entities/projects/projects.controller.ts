@@ -22,7 +22,7 @@ export class ProjectsController {
   @Post()
   @ApiOperation({ summary: 'Создать новый проект' })
   @ApiResponse({ status: 200, type: Project })
-  @RoleDecorator('Producer', 'Art director', '2d artist')
+  @RoleDecorator('Producer', 'Art director', 'Manager')
   @UseGuards(RolesGuard)
   async create(
     @UserDecorator() currentUser: User,

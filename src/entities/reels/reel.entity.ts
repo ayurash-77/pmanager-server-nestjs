@@ -1,7 +1,8 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '@app/entities/users/user.entity';
 import { Project } from '@app/entities/projects/project.entity';
+import { Sequence } from '@app/entities/sequences/sequence.entity';
 
 @Entity({ name: 'reels' })
 export class Reel {
@@ -23,6 +24,9 @@ export class Reel {
 
   @ManyToOne(() => Project, project => project.reels)
   project: Project;
+
+  @OneToMany(() => Sequence, sequence => sequence.reel, { eager: true })
+  sequences: Sequence[];
 
   @ManyToOne(() => User, user => user.createdReels, { eager: true })
   createdBy: User;

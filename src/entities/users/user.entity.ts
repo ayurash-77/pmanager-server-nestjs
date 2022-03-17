@@ -1,10 +1,11 @@
-import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Role } from '@app/entities/roles/role.entity';
 import { Project } from '@app/entities/projects/project.entity';
 import { Brief } from '@app/entities/briefs/brief.entity';
 import { Post } from '@app/entities/posts/post.entity';
 import { Reel } from '@app/entities/reels/reel.entity';
+import { Sequence } from '@app/entities/sequences/sequence.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -48,10 +49,8 @@ export class User {
   @Column({ nullable: true })
   image?: string;
 
-  // @ManyToMany(() => Role, { eager: true })
-  @ManyToMany(() => Role, { eager: true })
-  @JoinTable({ name: 'users_roles' })
-  roles: Role[];
+  @ManyToOne(() => Role, role => role.users, { eager: true })
+  role: Role;
 
   @OneToMany(() => Project, project => project.owner)
   projects: Project[];
@@ -65,6 +64,9 @@ export class User {
   @OneToMany(() => Post, post => post.createdBy)
   createdPosts: Post[];
 
-  @OneToMany(() => Post, post => post.createdBy)
+  @OneToMany(() => Reel, reel => reel.createdBy)
   createdReels: Reel[];
+
+  @OneToMany(() => Sequence, sequence => sequence.createdBy)
+  createdSequence: Sequence[];
 }

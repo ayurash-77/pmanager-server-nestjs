@@ -19,8 +19,14 @@ export class ReelsService {
   }
 
   // Получить все ролики
-  async getAll(): Promise<Reel[]> {
+  async getAll(projectId?: number): Promise<Reel[]> {
+    if (projectId) return await this.reelsRepo.find({ where: { projectId } });
     return await this.reelsRepo.find();
+  }
+
+  // Получить все ролики проекта
+  async getAllByProjectId(id: number): Promise<Reel[]> {
+    return await this.reelsRepo.find({ where: { projectId: id } });
   }
 
   // Получить ролик по ID

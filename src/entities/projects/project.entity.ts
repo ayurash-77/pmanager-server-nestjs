@@ -16,6 +16,7 @@ import { Agency } from '@app/entities/agencies/agency.entity';
 import { Client } from '@app/entities/clients/client.entity';
 import { Post } from '@app/entities/posts/post.entity';
 import { Reel } from '@app/entities/reels/reel.entity';
+import { Sequence } from '@app/entities/sequences/sequence.entity';
 
 @Entity({ name: 'projects' })
 export class Project {
@@ -94,4 +95,7 @@ export class Project {
 
   @OneToMany(() => Reel, reel => reel.project, { eager: true })
   reels: Reel[];
+
+  @OneToMany(() => Sequence, sequence => sequence.project, { eager: true })
+  sequences: Sequence[];
 }

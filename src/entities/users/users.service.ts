@@ -27,7 +27,7 @@ export class UsersService {
         username: user.username,
         email: user.email,
         isAdmin: user.isAdmin,
-        roles: user.roles,
+        role: user.role,
       },
       process.env.JWT_SECRET,
     );
@@ -99,7 +99,7 @@ export class UsersService {
 
   // Получить пользователя по ID
   async getById(id: number): Promise<User | null> {
-    const user = await this.repo.findOne(id, { relations: ['roles'] });
+    const user = await this.repo.findOne(id);
     if (!user) throw new HttpException(`User with ID=${id} not found`, HttpStatus.NOT_FOUND);
     return user;
   }

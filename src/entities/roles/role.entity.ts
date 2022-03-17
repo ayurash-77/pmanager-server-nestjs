@@ -1,7 +1,8 @@
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Job } from '@app/entities/jobs/job.entity';
 import { JoinTable } from 'typeorm';
+import { User } from '@app/entities/users/user.entity';
 
 @Entity({ name: 'roles' })
 export class Role {
@@ -22,4 +23,7 @@ export class Role {
   @ManyToMany(() => Job)
   @JoinTable({ name: 'roles_jobs' })
   jobs: Job[];
+
+  @OneToMany(() => User, user => user.role)
+  users: User[];
 }
