@@ -14,59 +14,59 @@ import { User } from '@app/entities/users/user.entity';
 @UseGuards(AuthGuard)
 @Controller('reels')
 export class ReelsController {
-  constructor(private readonly reelsService: ReelsService) {}
+  constructor(private readonly sequencesService: ReelsService) {}
 
-  // Создать новый Ролик
+  // Создать новый ролик
   @Post()
-  @ApiOperation({ summary: 'Создать новый Ролик' })
+  @ApiOperation({ summary: 'Создать новый ролик' })
   @ApiResponse({ status: 200, type: Reel })
   @RoleDecorator('Producer', 'Art director', 'Manager')
   @UseGuards(RolesGuard)
-  create(@UserDecorator() user: User, @Body() createReelDto: CreateReelDto): Promise<Reel> {
-    return this.reelsService.create(user, createReelDto);
+  create(@UserDecorator() user: User, @Body() dto: CreateReelDto): Promise<Reel> {
+    return this.sequencesService.create(user, dto);
   }
 
-  // Получить все Ролики
+  // Получить все ролики
   @Get()
-  @ApiOperation({ summary: 'Получить все Ролики' })
+  @ApiOperation({ summary: 'Получить все ролики' })
   @ApiResponse({ status: 200, type: [Reel] })
   getAll(@Query('projectId') projectId?: string) {
-    return this.reelsService.getAll(+projectId);
+    return this.sequencesService.getAll(+projectId);
   }
 
-  // Получить все Ролики проекта
+  // Получить все ролики проекта
   @Get('projects/:id')
-  @ApiOperation({ summary: 'Получить все Ролики проекта' })
+  @ApiOperation({ summary: 'Получить все ролики проекта' })
   @ApiResponse({ status: 200, type: [Reel] })
   getAllByProjectId(@Param('id') id: string) {
-    return this.reelsService.getAllByProjectId(+id);
+    return this.sequencesService.getAllByProjectId(+id);
   }
 
-  // Получить Ролик по ID
+  // Получить ролик по ID
   @Get(':id')
-  @ApiOperation({ summary: 'Получить Ролик по ID' })
+  @ApiOperation({ summary: 'Получить ролик по ID' })
   @ApiResponse({ status: 200, type: Reel })
   getById(@Param('id') id: string) {
-    return this.reelsService.getById(+id);
+    return this.sequencesService.getById(+id);
   }
 
-  // Изменить Ролик по ID
+  // Изменить ролик по ID
   @Patch(':id')
-  @ApiOperation({ summary: 'Изменить Ролик по ID' })
+  @ApiOperation({ summary: 'Изменить ролик по ID' })
   @ApiResponse({ status: 200, type: Reel })
   @RoleDecorator('Producer', 'Art director', 'Manager')
   @UseGuards(RolesGuard)
-  update(@Param('id') id: string, @Body() updateReelDto: UpdateReelDto) {
-    return this.reelsService.update(+id, updateReelDto);
+  update(@Param('id') id: string, @Body() dto: UpdateReelDto) {
+    return this.sequencesService.update(+id, dto);
   }
 
-  // Удалить Ролик по ID
+  // Удалить ролик по ID
   @Delete(':id')
-  @ApiOperation({ summary: 'Удалить Ролик по ID' })
+  @ApiOperation({ summary: 'Удалить ролик по ID' })
   @ApiResponse({ status: 200, type: Reel })
   @RoleDecorator('Producer', 'Art director', 'Manager')
   @UseGuards(RolesGuard)
   remove(@Param('id') id: string) {
-    return this.reelsService.remove(+id);
+    return this.sequencesService.remove(+id);
   }
 }

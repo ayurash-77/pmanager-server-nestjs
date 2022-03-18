@@ -15,8 +15,9 @@ import { Brand } from '@app/entities/brands/brand.entity';
 import { Agency } from '@app/entities/agencies/agency.entity';
 import { Client } from '@app/entities/clients/client.entity';
 import { Post } from '@app/entities/posts/post.entity';
+import { ReelsType } from '@app/entities/reelsTypes/reelsType.entity';
 import { Reel } from '@app/entities/reels/reel.entity';
-import { Sequence } from '@app/entities/sequences/sequence.entity';
+import { Shot } from '@app/entities/shots/shot.entity';
 
 @Entity({ name: 'projects' })
 export class Project {
@@ -93,9 +94,12 @@ export class Project {
   @OneToMany(() => Post, post => post.project, { eager: true })
   posts: Post[];
 
+  @OneToMany(() => ReelsType, reelsType => reelsType.project, { eager: true })
+  reelsTypes: ReelsType[];
+
   @OneToMany(() => Reel, reel => reel.project, { eager: true })
   reels: Reel[];
 
-  @OneToMany(() => Sequence, sequence => sequence.project, { eager: true })
-  sequences: Sequence[];
+  @OneToMany(() => Shot, shot => shot.project, { eager: true })
+  shots: Shot[];
 }

@@ -4,7 +4,6 @@ import { UpdateReelDto } from './dto/update-reel.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Reel } from '@app/entities/reels/reel.entity';
 import { Repository } from 'typeorm';
-import { IsTakenField } from '@app/utils/isTakenField';
 import { User } from '@app/entities/users/user.entity';
 
 @Injectable()
@@ -12,8 +11,8 @@ export class ReelsService {
   constructor(@InjectRepository(Reel) public reelsRepo: Repository<Reel>) {}
 
   // Создать новый ролик
-  async create(user: User, createReelDto: CreateReelDto): Promise<Reel> {
-    const reel = this.reelsRepo.create(createReelDto);
+  async create(user: User, createSequenceDto: CreateReelDto): Promise<Reel> {
+    const reel = this.reelsRepo.create(createSequenceDto);
     reel.createdBy = user;
     return await this.reelsRepo.save(reel);
   }
@@ -37,10 +36,10 @@ export class ReelsService {
   }
 
   // Изменить ролик по ID
-  async update(id: number, updateReelDto: UpdateReelDto): Promise<Reel> {
+  async update(id: number, updateSequenceDto: UpdateReelDto): Promise<Reel> {
     const reel = await this.getById(id);
-    // await IsTakenField(this.reelsRepo, 'name', updateReelDto, Reel.name, id);
-    Object.assign(reel, updateReelDto);
+    // await IsTakenField(this.reelsRepo, 'name', updateSequenceDto, Sequence.name, id);
+    Object.assign(reel, updateSequenceDto);
     return this.reelsRepo.save(reel);
   }
 

@@ -6,11 +6,15 @@ import { Brief } from '@app/entities/briefs/brief.entity';
 import { ProjectsModule } from '@app/entities/projects/projects.module';
 import { FilesService } from '@app/files/files.service';
 import { Project } from '@app/entities/projects/project.entity';
-import { BriefCategory } from '@app/entities/brief-categories/brief-category.entity';
-import { BriefCategoriesModule } from '@app/entities/brief-categories/brief-categories.module';
+import { BriefsCategory } from '@app/entities/briefsCategories/briefsCategory.entity';
+import { BriefsCategoriesModule } from '@app/entities/briefsCategories/briefsCategories.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Brief, Project, BriefCategory]), ProjectsModule, BriefCategoriesModule],
+  imports: [
+    TypeOrmModule.forFeature([Brief, Project, BriefsCategory]),
+    ProjectsModule,
+    BriefsCategoriesModule,
+  ],
   controllers: [BriefsController],
   providers: [BriefsService, FilesService],
 })

@@ -1,11 +1,12 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Role } from '@app/entities/roles/role.entity';
 import { Project } from '@app/entities/projects/project.entity';
 import { Brief } from '@app/entities/briefs/brief.entity';
 import { Post } from '@app/entities/posts/post.entity';
+import { ReelsType } from '@app/entities/reelsTypes/reelsType.entity';
 import { Reel } from '@app/entities/reels/reel.entity';
-import { Sequence } from '@app/entities/sequences/sequence.entity';
+import { Shot } from '@app/entities/shots/shot.entity';
 
 @Entity({ name: 'users' })
 export class User {
@@ -64,9 +65,12 @@ export class User {
   @OneToMany(() => Post, post => post.createdBy)
   createdPosts: Post[];
 
-  @OneToMany(() => Reel, reel => reel.createdBy)
-  createdReels: Reel[];
+  @OneToMany(() => ReelsType, reel => reel.createdBy)
+  createdReels: ReelsType[];
 
-  @OneToMany(() => Sequence, sequence => sequence.createdBy)
-  createdSequence: Sequence[];
+  @OneToMany(() => Reel, sequence => sequence.createdBy)
+  createdSequences: Reel[];
+
+  @OneToMany(() => Shot, shot => shot.createdBy)
+  createdShots: Shot[];
 }

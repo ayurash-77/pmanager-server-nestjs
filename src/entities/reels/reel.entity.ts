@@ -1,20 +1,21 @@
 import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from '@app/entities/users/user.entity';
 import { Project } from '@app/entities/projects/project.entity';
-import { Sequence } from '@app/entities/sequences/sequence.entity';
+import { User } from '@app/entities/users/user.entity';
+import { ReelsType } from '@app/entities/reelsTypes/reelsType.entity';
+import { Shot } from '@app/entities/shots/shot.entity';
 
-@Entity({ name: 'reels' })
+@Entity({ name: 'sequences' })
 export class Reel {
   @ApiProperty({ example: 1, description: 'Уникальный ID' })
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ApiProperty({ example: 'MultiCard for pensioners', description: 'Тематика ролика' })
+  @ApiProperty({ example: '10 sec', description: 'Хронометраж' })
   @Column()
   name: string;
 
-  @ApiProperty({ example: 'MFP', description: 'Код ролика' })
+  @ApiProperty({ example: 'MFP_10s', description: 'Код хронометража' })
   @Column()
   code: string;
 
@@ -25,9 +26,16 @@ export class Reel {
   @ManyToOne(() => Project, project => project.reels)
   project: Project;
 
-  @OneToMany(() => Sequence, sequence => sequence.reel, { eager: true })
-  sequences: Sequence[];
+  @ApiProperty({ example: '1', description: 'ID типа ролика' })
+  @Column()
+  reelsTypeId: number;
 
-  @ManyToOne(() => User, user => user.createdReels, { eager: true })
+  @ManyToOne(() => ReelsType, reelsType => reelsType.reels)
+  reelsType: ReelsType;
+
+  @OneToMany(() => Shot, shot => shot.reel, { eager: true })
+  shots: Shot[];
+
+  @ManyToOne(() => User, user => user.createdSequences, { eager: true })
   createdBy: User;
 }

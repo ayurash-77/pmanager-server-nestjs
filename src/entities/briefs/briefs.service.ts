@@ -12,7 +12,7 @@ import { Project } from '@app/entities/projects/project.entity';
 import { format } from 'date-fns';
 import * as path from 'path';
 import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
-import { BriefCategory } from '@app/entities/brief-categories/brief-category.entity';
+import { BriefsCategory } from '@app/entities/briefsCategories/briefsCategory.entity';
 import { User } from '@app/entities/users/user.entity';
 import { IsTakenField } from '@app/utils/isTakenField';
 
@@ -21,7 +21,7 @@ export class BriefsService {
   constructor(
     @InjectRepository(Brief) public briefRepository: Repository<Brief>,
     @InjectRepository(Project) public projectRepository: Repository<Project>,
-    @InjectRepository(BriefCategory) public briefCategoryRepository: Repository<BriefCategory>,
+    @InjectRepository(BriefsCategory) public briefCategoryRepository: Repository<BriefsCategory>,
     private projectsService: ProjectsService,
     private filesService: FilesService,
   ) {}
@@ -33,20 +33,20 @@ export class BriefsService {
   }
 
   // Создать новый бриф
-  async create(user: User, createBriefDto: CreateBriefDto): Promise<Brief> {
+  async create(user: User, dto: CreateBriefDto): Promise<Brief> {
     const createdAt = new Date();
     const briefDate = format(createdAt, 'yyyy.MM.dd_HH-mm');
-    const project = await this.projectsService.getById(createBriefDto.projectId);
-    const briefDir = await this.getBriefFolder(createBriefDto.projectId);
+    const project = await this.projectsService.getById(dto.projectId);
+    const briefDir = await this.getBriefFolder(dto.projectId);
 
-    const category = createBriefDto.categoryId
-      ? await this.briefCategoryRepository.findOne(createBriefDto.categoryId)
+    const category = dto.categoryId
+      ? await this.briefCategoryRepository.findOne(dto.categoryId)
       : await this.briefCategoryRepository.findOne({ where: { code: 1 } });
 
-    const name = createBriefDto.name || `Brief_${category.name}`;
+    const name = dto.name || `Brief_${category.name}`;
     const filename = `${name}_${briefDate}`;
-    const originalName = createBriefDto.originalName;
-    const ext = path.extname(createBriefDto.originalName);
+    const originalName = dto.originalName;
+    const ext = path.extname(dto.originalName);
     const dstUrl = `${briefDir}/${filename}${ext}`;
 
     if (await this.briefRepository.findOne({ filename })) {
@@ -62,13 +62,13 @@ export class BriefsService {
     //   );
     // }
 
-    const srcPath = `${appPath}/${createBriefDto.url}`;
+    const srcPath = `${appPath}/${dto.url}`;
     const dstPath = `${process.env.WORK_ROOT}/${dstUrl}`;
     const moveFileDto: MoveFileDto = { srcPath, dstPath };
     await this.filesService.moveFile(moveFileDto);
 
-    createBriefDto.name = name;
-    const brief = await this.briefRepository.create(createBriefDto);
+    dto.name = name;
+    const brief = await this.briefRepository.create(dto);
     brief.createdBy = user;
     brief.filename = filename;
     brief.originalName = originalName;

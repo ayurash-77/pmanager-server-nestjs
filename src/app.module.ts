@@ -18,8 +18,8 @@ import { BriefsModule } from './entities/briefs/briefs.module';
 import { StatusesModule } from './entities/statuses/statuses.module';
 import { ClientsModule } from './entities/clients/clients.module';
 import { ShotsModule } from './entities/shots/shots.module';
-import { SequencesModule } from './entities/sequences/sequences.module';
 import { ReelsModule } from './entities/reels/reels.module';
+import { ReelsTypesModule } from './entities/reelsTypes/reelsTypes.module';
 import { PostsModule } from './entities/posts/posts.module';
 import { TasksModule } from './entities/tasks/tasks.module';
 
@@ -52,8 +52,8 @@ import { TasksModule } from './entities/tasks/tasks.module';
     StatusesModule,
     ClientsModule,
     ShotsModule,
-    SequencesModule,
     ReelsModule,
+    ReelsTypesModule,
     PostsModule,
     TasksModule,
   ],

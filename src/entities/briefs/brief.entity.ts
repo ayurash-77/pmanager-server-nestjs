@@ -9,7 +9,7 @@ import {
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Project } from '@app/entities/projects/project.entity';
 import { User } from '@app/entities/users/user.entity';
-import { BriefCategory } from '@app/entities/brief-categories/brief-category.entity';
+import { BriefsCategory } from '@app/entities/briefsCategories/briefsCategory.entity';
 
 @Entity({ name: 'briefs' })
 export class Brief {
@@ -64,6 +64,6 @@ export class Brief {
   @ManyToOne(() => User, user => user.updatedBriefs, { eager: true })
   updatedBy: User;
 
-  @ManyToOne(() => BriefCategory, briefCategory => briefCategory.briefs, { eager: true })
-  category: BriefCategory;
+  @ManyToOne(() => BriefsCategory, briefCategory => briefCategory.briefs, { eager: true })
+  category: BriefsCategory;
 }
