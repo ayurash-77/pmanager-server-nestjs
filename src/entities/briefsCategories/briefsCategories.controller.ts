@@ -10,7 +10,7 @@ import { AuthGuard } from '@app/entities/users/guards/auth.guard';
 // import { RolesGuard } from '@app/entities/roles/guards/roles.guard';
 
 @ApiTags('Категории брифов')
-@Controller('briefsCategories')
+@Controller('briefs-categories')
 @UseGuards(AuthGuard)
 // @RoleDecorator('Producer', 'Art director', 'Manager')
 // @UseGuards(RolesGuard)

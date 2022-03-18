@@ -12,7 +12,7 @@ import { User } from '@app/entities/users/user.entity';
 
 @ApiTags('типы роликов')
 @UseGuards(AuthGuard)
-@Controller('reels')
+@Controller('reels-types')
 export class ReelsTypesController {
   constructor(private readonly reelsService: ReelsTypesService) {}
 
