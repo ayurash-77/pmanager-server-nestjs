@@ -22,8 +22,8 @@ export class ShotsController {
   @ApiResponse({ status: 200, type: Shot })
   @RoleDecorator('Producer', 'Art director', 'Manager')
   @UseGuards(RolesGuard)
-  create(@UserDecorator() user: User, @Body() createShotDto: CreateShotDto): Promise<Shot> {
-    return this.shotsService.create(user, createShotDto);
+  create(@UserDecorator() user: User, @Body() dto: CreateShotDto): Promise<Shot> {
+    return this.shotsService.create(user, dto);
   }
 
   // Получить все шоты

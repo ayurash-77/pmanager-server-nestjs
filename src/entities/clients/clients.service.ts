@@ -11,9 +11,9 @@ export class ClientsService {
   constructor(@InjectRepository(Client) public repo: Repository<Client>) {}
 
   // Создать нового клиента
-  async create(createClientDto: CreateClientDto): Promise<Client> {
-    await IsTakenField(this.repo, 'name', createClientDto, Client.name);
-    const client = this.repo.create(createClientDto);
+  async create(dto: CreateClientDto): Promise<Client> {
+    await IsTakenField(this.repo, 'name', dto.name, Client.name);
+    const client = this.repo.create(dto);
     return await this.repo.save(client);
   }
 
@@ -30,10 +30,10 @@ export class ClientsService {
   }
 
   // Изменить клиента по ID
-  async update(id: number, updateClientDto: UpdateClientDto): Promise<Client> {
+  async update(id: number, dto: UpdateClientDto): Promise<Client> {
     const client = await this.getById(id);
-    await IsTakenField(this.repo, 'name', updateClientDto, Client.name, id);
-    Object.assign(client, updateClientDto);
+    await IsTakenField(this.repo, 'name', dto.name, Client.name, id);
+    Object.assign(client, dto);
     return this.repo.save(client);
   }
 

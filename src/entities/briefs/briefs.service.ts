@@ -94,10 +94,10 @@ export class BriefsService {
     return brief;
   }
 
-  async update(user: User, id: number, updateBriefDto: UpdateBriefDto): Promise<Brief> {
+  async update(user: User, id: number, dto: UpdateBriefDto): Promise<Brief> {
     const brief = await this.getById(id);
-    await IsTakenField(this.briefRepository, 'name', updateBriefDto, Brief.name, id);
-    Object.assign(brief, updateBriefDto);
+    await IsTakenField(this.briefRepository, 'name', dto.name, Brief.name, id);
+    Object.assign(brief, dto);
     brief.updatedBy = user;
     return this.briefRepository.save(brief);
   }

@@ -13,8 +13,8 @@ export class BriefsCategoriesService {
 
   // Создать новую категорию брифа
   async create(dto: CreateBriefsCategoryDto): Promise<BriefsCategory> {
-    await IsTakenField(this.briefsCategoriesRepo, 'name', dto, BriefsCategory.name);
-    await IsTakenField(this.briefsCategoriesRepo, 'code', dto, BriefsCategory.name);
+    await IsTakenField(this.briefsCategoriesRepo, 'name', dto.name, BriefsCategory.name);
+    await IsTakenField(this.briefsCategoriesRepo, 'code', dto.code, BriefsCategory.name);
     const category = await this.briefsCategoriesRepo.create(dto);
     return await this.briefsCategoriesRepo.save(category);
   }
@@ -34,7 +34,7 @@ export class BriefsCategoriesService {
   // Изменить категорию брифа по ID
   async update(id: number, dto: UpdateBriefsCategoryDto) {
     const category = await this.getById(id);
-    await IsTakenField(this.briefsCategoriesRepo, 'name', dto, BriefsCategory.name, id);
+    await IsTakenField(this.briefsCategoriesRepo, 'name', dto.name, BriefsCategory.name, id);
     Object.assign(category, dto);
     return this.briefsCategoriesRepo.save(category);
   }

@@ -11,8 +11,17 @@ export class ReelsTypesService {
   constructor(@InjectRepository(ReelsType) public reelsTypesRepo: Repository<ReelsType>) {}
 
   // Создать новый тип ролика
-  async create(user: User, createReelsTypeDto: CreateReelsTypeDto): Promise<ReelsType> {
-    const reel = this.reelsTypesRepo.create(createReelsTypeDto);
+  async create(user: User, dto: CreateReelsTypeDto): Promise<ReelsType> {
+    const candidate = await this.reelsTypesRepo.findOne({
+      where: { projectId: dto.projectId, code: dto.code },
+    });
+    if (candidate) {
+      throw new HttpException(
+        `Тип ролика проекта с ID: '${dto.projectId}' и code: '${dto.code}' уже существует`,
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
+    const reel = this.reelsTypesRepo.create(dto);
     reel.createdBy = user;
     return await this.reelsTypesRepo.save(reel);
   }

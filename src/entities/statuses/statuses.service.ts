@@ -13,8 +13,8 @@ export class StatusesService {
 
   // Создать новый статус
   async create(dto: CreateStatusDto): Promise<Status> {
-    await IsTakenField(this.statusRepo, 'name', dto, Status.name);
-    await IsTakenField(this.statusRepo, 'code', dto, Status.name);
+    await IsTakenField(this.statusRepo, 'name', dto.name, Status.name);
+    await IsTakenField(this.statusRepo, 'code', dto.code, Status.name);
     const status = await this.statusRepo.create(dto);
     return await this.statusRepo.save(status);
   }
@@ -41,7 +41,7 @@ export class StatusesService {
   // Изменить статус по ID
   async update(id: number, dto: UpdateStatusDto) {
     const status = await this.getById(id);
-    await IsTakenField(this.statusRepo, 'name', dto, Status.name, id);
+    await IsTakenField(this.statusRepo, 'name', dto.name, Status.name, id);
     Object.assign(status, dto);
     return this.statusRepo.save(status);
   }

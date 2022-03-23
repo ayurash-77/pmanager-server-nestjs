@@ -63,12 +63,12 @@ export class UsersService {
   }
 
   // Регистрация нового пользователя
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    await IsTakenField(this.repo, 'username', createUserDto, User.name);
-    await IsTakenField(this.repo, 'email', createUserDto, User.name);
+  async create(dto: CreateUserDto): Promise<User> {
+    await IsTakenField(this.repo, 'username', dto.username, User.name);
+    await IsTakenField(this.repo, 'email', dto.email, User.name);
     const user = new User();
-    Object.assign(user, createUserDto);
-    user.password = await this.hashPassword(createUserDto.password);
+    Object.assign(user, dto);
+    user.password = await this.hashPassword(dto.password);
     if (user.image) {
       user.image = await this.addUserImage(user.username, user.image);
     }
@@ -105,20 +105,20 @@ export class UsersService {
   }
 
   // Изменить пользователя по ID
-  async updateById(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+  async updateById(id: number, dto: UpdateUserDto): Promise<User> {
     const user = await this.getById(id);
 
-    await IsTakenField(this.repo, 'username', updateUserDto, User.name, id);
-    await IsTakenField(this.repo, 'email', updateUserDto, User.name, id);
+    await IsTakenField(this.repo, 'username', dto.username, User.name, id);
+    await IsTakenField(this.repo, 'email', dto.email, User.name, id);
 
     const oldImage = user.image;
 
-    Object.assign(user, updateUserDto);
-    const newImage = await this.addUserImage(user.username, updateUserDto.image);
+    Object.assign(user, dto);
+    const newImage = await this.addUserImage(user.username, dto.image);
 
     user.image = newImage ? newImage : oldImage;
 
-    if (user.password) user.password = await hash(updateUserDto.password, 5);
+    if (user.password) user.password = await hash(dto.password, 5);
     return this.repo.save(user);
   }
 

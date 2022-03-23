@@ -11,9 +11,9 @@ export class TagsService {
   constructor(@InjectRepository(Tag) public repo: Repository<Tag>) {}
 
   // Создать новый тег
-  async create(createTagDto: CreateTagDto): Promise<Tag> {
-    await IsTakenField(this.repo, 'name', createTagDto, Tag.name);
-    const tag = this.repo.create(createTagDto);
+  async create(dto: CreateTagDto): Promise<Tag> {
+    await IsTakenField(this.repo, 'name', dto.name, Tag.name);
+    const tag = this.repo.create(dto);
     return await this.repo.save(tag);
   }
 
@@ -36,10 +36,10 @@ export class TagsService {
   }
 
   // Изменить тег по ID
-  async update(id: number, updateTagDto: UpdateTagDto): Promise<Tag> {
+  async update(id: number, dto: UpdateTagDto): Promise<Tag> {
     const tag = await this.getById(id);
-    await IsTakenField(this.repo, 'name', updateTagDto, Tag.name, id);
-    Object.assign(tag, updateTagDto);
+    await IsTakenField(this.repo, 'name', dto.name, Tag.name, id);
+    Object.assign(tag, dto);
     return this.repo.save(tag);
   }
 

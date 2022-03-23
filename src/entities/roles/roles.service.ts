@@ -16,9 +16,9 @@ export class RolesService {
   ) {}
 
   // Создать новую роль
-  async create(createRoleDto: CreateRoleDto): Promise<Role> {
-    await IsTakenField(this.rolesRepo, 'name', createRoleDto, Role.name);
-    const role = this.rolesRepo.create(createRoleDto);
+  async create(dto: CreateRoleDto): Promise<Role> {
+    await IsTakenField(this.rolesRepo, 'name', dto.name, Role.name);
+    const role = this.rolesRepo.create(dto);
     return await this.rolesRepo.save(role);
   }
 
@@ -35,10 +35,10 @@ export class RolesService {
   }
 
   // Изменить роль по ID
-  async update(id: number, updateRoleDto: UpdateRoleDto): Promise<Role> {
+  async update(id: number, dto: UpdateRoleDto): Promise<Role> {
     const role = await this.getById(id);
-    await IsTakenField(this.rolesRepo, 'name', updateRoleDto, Role.name, id);
-    Object.assign(role, updateRoleDto);
+    await IsTakenField(this.rolesRepo, 'name', dto.name, Role.name, id);
+    Object.assign(role, dto);
     return this.rolesRepo.save(role);
   }
 

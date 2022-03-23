@@ -11,9 +11,9 @@ export class AgenciesService {
   constructor(@InjectRepository(Agency) public repo: Repository<Agency>) {}
 
   // Создать новое агенство
-  async create(createAgencyDto: CreateAgencyDto): Promise<Agency> {
-    await IsTakenField(this.repo, 'name', createAgencyDto, Agency.name);
-    const agency = this.repo.create(createAgencyDto);
+  async create(dto: CreateAgencyDto): Promise<Agency> {
+    await IsTakenField(this.repo, 'name', dto.name, Agency.name);
+    const agency = this.repo.create(dto);
     return await this.repo.save(agency);
   }
 
@@ -30,10 +30,10 @@ export class AgenciesService {
   }
 
   // Изменить агенство по ID
-  async update(id: number, updateAgencyDto: UpdateAgencyDto): Promise<Agency> {
+  async update(id: number, dto: UpdateAgencyDto): Promise<Agency> {
     const agency = await this.getById(id);
-    await IsTakenField(this.repo, 'name', updateAgencyDto, Agency.name, id);
-    Object.assign(agency, updateAgencyDto);
+    await IsTakenField(this.repo, 'name', dto.name, Agency.name, id);
+    Object.assign(agency, dto);
     return this.repo.save(agency);
   }
 

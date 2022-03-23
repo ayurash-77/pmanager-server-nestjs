@@ -11,9 +11,9 @@ export class BrandsService {
   constructor(@InjectRepository(Brand) public repo: Repository<Brand>) {}
 
   // Создать новый брэнд
-  async create(createBrandDto: CreateBrandDto): Promise<Brand> {
-    await IsTakenField(this.repo, 'name', createBrandDto, Brand.name);
-    const brand = this.repo.create(createBrandDto);
+  async create(dto: CreateBrandDto): Promise<Brand> {
+    await IsTakenField(this.repo, 'name', dto.name, Brand.name);
+    const brand = this.repo.create(dto);
     return await this.repo.save(brand);
   }
 
@@ -30,10 +30,10 @@ export class BrandsService {
   }
 
   // Изменить брэнд по ID
-  async update(id: number, updateBrandDto: UpdateBrandDto): Promise<Brand> {
+  async update(id: number, dto: UpdateBrandDto): Promise<Brand> {
     const brand = await this.getById(id);
-    await IsTakenField(this.repo, 'name', updateBrandDto, Brand.name, id);
-    Object.assign(brand, updateBrandDto);
+    await IsTakenField(this.repo, 'name', dto.name, Brand.name, id);
+    Object.assign(brand, dto);
     return this.repo.save(brand);
   }
 

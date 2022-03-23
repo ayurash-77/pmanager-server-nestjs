@@ -1,6 +1,9 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Project } from '@app/entities/projects/project.entity';
+import { Shot } from '@app/entities/shots/shot.entity';
+import { Reel } from '@app/entities/reels/reel.entity';
+import { ReelsType } from '@app/entities/reelsTypes/reelsType.entity';
 
 @Entity({ name: 'statuses' })
 export class Status {
@@ -23,4 +26,13 @@ export class Status {
 
   @OneToMany(() => Project, project => project.status)
   projects: Project[];
+
+  @OneToMany(() => Shot, shot => shot.status)
+  shots: Shot[];
+
+  @OneToMany(() => Reel, reel => reel.status)
+  reels: Reel[];
+
+  @OneToMany(() => ReelsType, reelsType => reelsType.status)
+  reelsTypes: ReelsType[];
 }

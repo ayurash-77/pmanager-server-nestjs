@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { User } from '@app/entities/users/user.entity';
 import { Project } from '@app/entities/projects/project.entity';
 import { Reel } from '@app/entities/reels/reel.entity';
-import { Shot } from '@app/entities/shots/shot.entity';
+import { Status } from '@app/entities/statuses/status.entity';
 
 @Entity({ name: 'reelsTypes' })
 export class ReelsType {
@@ -19,6 +19,13 @@ export class ReelsType {
   @Column()
   code: string;
 
+  @ApiProperty({ example: '50%', description: 'Прогресс' })
+  @Column({ default: 0 })
+  progress: number;
+
+  @ManyToOne(() => Status, status => status.reelsTypes, { eager: true })
+  status: Status;
+
   @ApiProperty({ example: '1', description: 'ID проекта' })
   @Column()
   projectId: number;
@@ -28,9 +35,6 @@ export class ReelsType {
 
   @OneToMany(() => Reel, reel => reel.reelsType, { eager: true })
   reels: Reel[];
-
-  @OneToMany(() => Shot, shot => shot.reel, { eager: true })
-  shots: Shot[];
 
   @ManyToOne(() => User, user => user.createdReels, { eager: true })
   createdBy: User;

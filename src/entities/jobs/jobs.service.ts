@@ -11,9 +11,9 @@ export class JobsService {
   constructor(@InjectRepository(Job) public jobRepo: Repository<Job>) {}
 
   // Создать новый тип работ
-  async create(createJobDto: CreateJobDto): Promise<Job> {
-    await IsTakenField(this.jobRepo, 'name', createJobDto, Job.name);
-    const job = this.jobRepo.create(createJobDto);
+  async create(dto: CreateJobDto): Promise<Job> {
+    await IsTakenField(this.jobRepo, 'name', dto.name, Job.name);
+    const job = this.jobRepo.create(dto);
     return await this.jobRepo.save(job);
   }
 
@@ -30,10 +30,10 @@ export class JobsService {
   }
 
   // Изменить тип работ по ID
-  async update(id: number, updateJobDto: UpdateJobDto): Promise<Job> {
+  async update(id: number, dto: UpdateJobDto): Promise<Job> {
     const job = await this.getById(id);
-    await IsTakenField(this.jobRepo, 'name', updateJobDto, Job.name, id);
-    Object.assign(job, updateJobDto);
+    await IsTakenField(this.jobRepo, 'name', dto.name, Job.name, id);
+    Object.assign(job, dto);
     return this.jobRepo.save(job);
   }
 
