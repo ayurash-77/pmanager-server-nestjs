@@ -1,10 +1,11 @@
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Project } from '@app/entities/projects/project.entity';
 import { User } from '@app/entities/users/user.entity';
 import { ReelsType } from '@app/entities/reelsTypes/reelsType.entity';
 import { Shot } from '@app/entities/shots/shot.entity';
 import { Status } from '@app/entities/statuses/status.entity';
+import { Post } from '@app/entities/posts/post.entity';
 
 @Entity({ name: 'reels' })
 export class Reel {
@@ -24,6 +25,11 @@ export class Reel {
   @Column()
   code: string;
 
+  @ApiProperty({ example: 'true', description: 'Высокий приоритет' })
+  @ApiPropertyOptional()
+  @Column({ default: false })
+  highPriority: boolean;
+
   @ApiProperty({ example: '50%', description: 'Прогресс' })
   @Column({ default: 0 })
   progress: number;
@@ -35,19 +41,34 @@ export class Reel {
   @Column()
   projectId: number;
 
-  @ManyToOne(() => Project, project => project.reels)
+  @ManyToOne(() => Project, project => project.reels, { onDelete: 'CASCADE' })
   project: Project;
 
   @ApiProperty({ example: '1', description: 'ID типа ролика' })
   @Column()
   reelsTypeId: number;
 
-  @ManyToOne(() => ReelsType, reelsType => reelsType.reels)
+  @ManyToOne(() => ReelsType, reelsType => reelsType.reels, { onDelete: 'CASCADE' })
   reelsType: ReelsType;
+
+  @ApiProperty({ example: '1', description: 'IDs шотов' })
+  @Column({
+    type: 'jsonb',
+    array: false,
+    default: () => "'[]'",
+  })
+  shotsIds: Array<number>;
+
+  // @OneToMany(() => Post, post => post.reel)
+  // posts: Post[];
 
   @ManyToMany(() => Shot, { eager: true })
   @JoinTable({ name: 'reels_shots' })
   shots: Shot[];
+
+  @ManyToMany(() => Post)
+  @JoinTable({ name: 'posts_reels' })
+  posts: Post[];
 
   @ManyToOne(() => User, user => user.createdSequences, { eager: true })
   createdBy: User;

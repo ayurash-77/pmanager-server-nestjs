@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Put, Param, Delete, UseGuards, Query } from '@nestjs/common';
 import { ReelsService } from './reels.service';
 import { CreateReelDto } from './dto/create-reel.dto';
 import { UpdateReelDto } from './dto/update-reel.dto';
@@ -26,20 +26,13 @@ export class ReelsController {
     return this.sequencesService.create(user, dto);
   }
 
-  // Получить все ролики
+  // Получить ролики по фильтру
   @Get()
-  @ApiOperation({ summary: 'Получить все ролики' })
+  @ApiOperation({ summary: 'Получить ролики по фильтру' })
   @ApiResponse({ status: 200, type: [Reel] })
-  getAll(@Query('projectId') projectId?: string) {
-    return this.sequencesService.getAll(+projectId);
-  }
-
-  // Получить все ролики проекта
-  @Get('projects/:id')
-  @ApiOperation({ summary: 'Получить все ролики проекта' })
-  @ApiResponse({ status: 200, type: [Reel] })
-  getAllByProjectId(@Param('id') id: string) {
-    return this.sequencesService.getAllByProjectId(+id);
+  getReels(@Query('projectId') projectId?: string) {
+    if (+projectId) return this.sequencesService.getAllByProjectId(+projectId);
+    return this.sequencesService.getAll();
   }
 
   // Получить ролик по ID
@@ -51,7 +44,7 @@ export class ReelsController {
   }
 
   // Изменить ролик по ID
-  @Patch(':id')
+  @Put(':id')
   @ApiOperation({ summary: 'Изменить ролик по ID' })
   @ApiResponse({ status: 200, type: Reel })
   @RoleDecorator('Producer', 'Art director', 'Manager')

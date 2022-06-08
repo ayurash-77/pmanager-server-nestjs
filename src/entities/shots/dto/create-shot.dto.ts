@@ -17,7 +17,7 @@ export class CreateShotDto {
   duration?: number;
 
   @IsNotEmpty({ message: `поле 'number' не может быть пустым` })
-  @IsNumberString({ message: `поле 'number' должно быть фифрами` })
+  @IsNumberString({ message: `поле 'number' должно быть цифрами` })
   @ApiProperty({ example: '010', description: 'Номер шота' })
   number: string;
 }

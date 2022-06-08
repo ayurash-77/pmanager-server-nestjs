@@ -30,10 +30,10 @@ export class ReelsType {
   @Column()
   projectId: number;
 
-  @ManyToOne(() => Project, project => project.reelsTypes)
+  @ManyToOne(() => Project, project => project.reelsTypes, { onDelete: 'CASCADE' })
   project: Project;
 
-  @OneToMany(() => Reel, reel => reel.reelsType, { eager: true })
+  @OneToMany(() => Reel, reel => reel.reelsType)
   reels: Reel[];
 
   @ManyToOne(() => User, user => user.createdReels, { eager: true })

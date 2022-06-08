@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -31,20 +32,13 @@ export class PostsController {
     return this.postsService.create(currentUser, createPostDto);
   }
 
-  // Получить все посты
+  // Получить посты по фильтру
   @Get()
-  @ApiOperation({ summary: 'Получить все посты' })
+  @ApiOperation({ summary: 'Получить посты по фильтру' })
   @ApiResponse({ status: 200, type: [Post] })
-  getAll(): Promise<Post[]> {
+  getPosts(@Query('projectId') projectId?: string): Promise<Post[] | []> {
+    if (+projectId) return this.postsService.getAllByProjectId(+projectId);
     return this.postsService.getAll();
-  }
-
-  // Получить все посты по ID проекта
-  @Get('project/:id')
-  @ApiOperation({ summary: 'Получить все посты по ID проекта' })
-  @ApiResponse({ status: 200, type: [Post] })
-  getByProjectId(@Param('id') id: string): Promise<Post[]> {
-    return this.postsService.getByProjectId(+id);
   }
 
   // Получить пост по ID

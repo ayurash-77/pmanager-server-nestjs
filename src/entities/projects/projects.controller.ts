@@ -45,8 +45,10 @@ export class ProjectsController {
   @Get(':id')
   @ApiOperation({ summary: 'Получить проект по ID' })
   @ApiResponse({ status: 200, type: Project })
-  async getById(@Param('id') id: string): Promise<ProjectResponseInterface> {
-    const project = await this.projectsService.getById(+id, { relations: ['briefs'] });
+  async getById(@Param('id') id: string): Promise<ProjectResponseInterface | null> {
+    const parsedId = parseInt(id);
+    if (!parsedId) return null;
+    const project = await this.projectsService.getById(+id, { relations: ['briefs', 'reels', 'shots'] });
     return this.projectsService.buildProjectResponse(project);
   }
 

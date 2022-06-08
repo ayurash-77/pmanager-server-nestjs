@@ -67,7 +67,8 @@ export class FilesService {
   checkForBrief(file: Express.Multer.File): boolean {
     if (
       !file.mimetype.includes('application/pdf') &&
-      !file.mimetype.includes('application/vnd.openxmlformats-officedocument')
+      !file.mimetype.includes('application/vnd.openxmlformats-officedocument') &&
+      !file.mimetype.includes('application/msword')
     ) {
       throw new HttpException(`Недопустимый формат файла`, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
     }

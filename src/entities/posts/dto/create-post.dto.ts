@@ -22,4 +22,21 @@ export class CreatePostDto {
   @ApiProperty({ example: '1', description: 'ID тега' })
   @ApiPropertyOptional()
   tagsIds?: number[];
+
+  @IsOptional()
+  @ApiProperty({ example: '1', description: 'ID ролика' })
+  @ApiPropertyOptional()
+  reelId?: number;
+
+  @IsOptional()
+  @IsArray({ message: `поле 'reelsIds' должно быть массивом чисел` })
+  @ApiProperty({ example: '1', description: 'ID тега' })
+  @ApiPropertyOptional()
+  reelsIds?: number[];
+
+  @IsOptional()
+  @IsArray({ message: `поле 'shotsIds' должно быть массивом чисел` })
+  @ApiProperty({ example: '1', description: 'ID тега' })
+  @ApiPropertyOptional()
+  shotsIds?: number[];
 }

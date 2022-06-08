@@ -60,8 +60,10 @@ export class UsersController {
   @UseGuards(AuthGuard)
   // @RoleDecorator('3d artist')
   // @UseGuards(RolesGuard)
-  async getById(@Param('id') id: string): Promise<UserResponseInterface> {
+  async getById(@Param('id') id: string): Promise<UserResponseInterface | null> {
+    if (!parseInt(id)) return null;
     const user = await this.usersService.getById(+id);
+    if (!user) return null;
     return this.usersService.buildUserResponse(user);
   }
 

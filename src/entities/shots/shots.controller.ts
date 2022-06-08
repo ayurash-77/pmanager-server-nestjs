@@ -26,20 +26,14 @@ export class ShotsController {
     return this.shotsService.create(user, dto);
   }
 
-  // Получить все шоты
+  // Получить шоты по фильтру
   @Get()
   @ApiOperation({ summary: 'Получить все шоты' })
   @ApiResponse({ status: 200, type: [Shot] })
-  getAll(@Query('projectId') projectId?: string) {
-    return this.shotsService.getAll(+projectId);
-  }
-
-  // Получить все шоты проекта
-  @Get('projects/:id')
-  @ApiOperation({ summary: 'Получить все шоты проекта' })
-  @ApiResponse({ status: 200, type: [Shot] })
-  getAllByProjectId(@Param('id') id: string) {
-    return this.shotsService.getAllByProjectId(+id);
+  getAll(@Query('projectId') projectId?: string, @Query('reelId') reelId?: string) {
+    if (+projectId) return this.shotsService.getAllByProjectId(+projectId);
+    if (+reelId) return this.shotsService.getAllByReelId(+reelId);
+    return this.shotsService.getAll();
   }
 
   // Получить шот по ID

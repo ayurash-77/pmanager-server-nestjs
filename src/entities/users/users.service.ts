@@ -84,7 +84,7 @@ export class UsersService {
       const moveFileDto: MoveFileDto = { srcPath, dstPath };
 
       const srcPathExists = await fse.pathExists(srcPath);
-      if (srcPathExists) {
+      if (srcPathExists && newImage !== srcPath) {
         const move = await this.filesService.moveFile(moveFileDto);
         if (move) return newImage;
       }
@@ -100,14 +100,16 @@ export class UsersService {
   // Получить пользователя по ID
   async getById(id: number): Promise<User | null> {
     const user = await this.repo.findOne(id);
-    if (!user) throw new HttpException(`User with ID=${id} not found`, HttpStatus.NOT_FOUND);
+    if (!user) return null;
+    // if (!user) throw new HttpException(`User with ID=${id} not found`, HttpStatus.NOT_FOUND);
     return user;
   }
 
   // Изменить пользователя по ID
-  async updateById(id: number, dto: UpdateUserDto): Promise<User> {
+  async updateById(id: number, dto: UpdateUserDto): Promise<User | null> {
     const user = await this.getById(id);
 
+    if (!user) return null;
     await IsTakenField(this.repo, 'username', dto.username, User.name, id);
     await IsTakenField(this.repo, 'email', dto.email, User.name, id);
 

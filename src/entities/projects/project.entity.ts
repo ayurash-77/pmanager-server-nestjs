@@ -76,7 +76,7 @@ export class Project {
   @ManyToOne(() => User, user => user.projects, { eager: true })
   owner: User;
 
-  @OneToMany(() => Brief, brief => brief.project, { eager: true })
+  @OneToMany(() => Brief, brief => brief.project)
   briefs: Brief[];
 
   @ManyToOne(() => Status, status => status.projects, { eager: true })
@@ -91,15 +91,15 @@ export class Project {
   @ManyToOne(() => Agency, agency => agency.projects, { eager: true })
   agency: Agency;
 
-  @OneToMany(() => Post, post => post.project, { eager: true })
+  @OneToMany(() => Post, post => post.project)
   posts: Post[];
 
-  @OneToMany(() => ReelsType, reelsType => reelsType.project, { eager: true })
+  @OneToMany(() => ReelsType, reelsType => reelsType.project)
   reelsTypes: ReelsType[];
 
-  @OneToMany(() => Reel, reel => reel.project, { eager: true })
+  @OneToMany(() => Reel, reel => reel.project)
   reels: Reel[];
 
-  @OneToMany(() => Shot, shot => shot.project, { eager: true })
+  @OneToMany(() => Shot, shot => shot.project)
   shots: Shot[];
 }

@@ -1,9 +1,10 @@
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { Project } from '@app/entities/projects/project.entity';
 import { User } from '@app/entities/users/user.entity';
 import { Reel } from '@app/entities/reels/reel.entity';
 import { Status } from '@app/entities/statuses/status.entity';
+import { Post } from '@app/entities/posts/post.entity';
 
 @Entity({ name: 'shots' })
 export class Shot {
@@ -30,12 +31,16 @@ export class Shot {
   @Column()
   projectId: number;
 
-  @ManyToOne(() => Project, project => project.shots)
+  @ManyToOne(() => Project, project => project.shots, { onDelete: 'CASCADE' })
   project: Project;
 
-  @ManyToMany(() => Reel)
+  @ManyToMany(() => Reel, { onDelete: 'CASCADE' })
   @JoinTable({ name: 'reels_shots' })
   reels: Reel[];
+
+  @ManyToMany(() => Post, { onDelete: 'CASCADE' })
+  @JoinTable({ name: 'posts_shots' })
+  posts: Post[];
 
   @ManyToOne(() => User, user => user.createdShots, { eager: true })
   createdBy: User;

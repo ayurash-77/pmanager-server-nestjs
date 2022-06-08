@@ -15,6 +15,7 @@ import { FindOneOptions } from 'typeorm/find-options/FindOneOptions';
 import { BriefsCategory } from '@app/entities/briefsCategories/briefsCategory.entity';
 import { User } from '@app/entities/users/user.entity';
 import { IsTakenField } from '@app/utils/isTakenField';
+import { Shot } from '@app/entities/shots/shot.entity';
 
 @Injectable()
 export class BriefsService {
@@ -49,9 +50,11 @@ export class BriefsService {
     const ext = path.extname(dto.originalName);
     const dstUrl = `${briefDir}/${filename}${ext}`;
 
-    if (await this.briefRepository.findOne({ filename })) {
+    const candidate = await this.briefRepository.findOne({ where: { name: name, projectId: project.id } });
+
+    if (candidate) {
       throw new HttpException(
-        `Бриф с названием '${name}' и датой '${briefDate}' уже существует`,
+        `Бриф с названием '${name}' и датой '${briefDate}' в проекте ${project.title} уже существует`,
         HttpStatus.UNPROCESSABLE_ENTITY,
       );
     }
@@ -84,6 +87,17 @@ export class BriefsService {
   // Получить все брифы
   getAll(): Promise<Brief[]> {
     return this.briefRepository.find();
+  }
+
+  // Получить брифы проекта
+  async getAllByProjectId(id: number): Promise<Brief[] | null> {
+    if (!id) return null;
+    const briefs = await this.briefRepository.find({
+      where: { projectId: id },
+      order: { category: 'ASC' },
+    });
+    if (!briefs) return null;
+    return briefs;
   }
 
   // Получить бриф по ID

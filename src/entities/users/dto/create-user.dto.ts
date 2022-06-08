@@ -34,7 +34,7 @@ export class CreateUserDto {
   surname?: string;
 
   @IsOptional()
-  @IsPhoneNumber('RU', { message: `поле 'phone' должно быть из 10-ти значным числом` })
+  // @IsPhoneNumber('RU', { message: `поле 'phone' должно быть из 10-ти значным числом` })
   @ApiProperty({ example: '9648889900', description: 'Мобильный телефон' })
   @ApiPropertyOptional()
   phone?: string;

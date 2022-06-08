@@ -7,6 +7,8 @@ import { Repository } from 'typeorm';
 import { User } from '@app/entities/users/user.entity';
 import { ProjectsService } from '@app/entities/projects/projects.service';
 import { TagsService } from '@app/entities/tags/tags.service';
+import { ReelsService } from '@app/entities/reels/reels.service';
+import { ShotsService } from '@app/entities/shots/shots.service';
 
 @Injectable()
 export class PostsService {
@@ -14,6 +16,8 @@ export class PostsService {
     @InjectRepository(Post) public postRepo: Repository<Post>,
     private projectsService: ProjectsService,
     private tagsService: TagsService,
+    private reelsService: ReelsService,
+    private shotsService: ShotsService,
   ) {}
 
   // Создать новый пост
@@ -21,8 +25,12 @@ export class PostsService {
     const post = await this.postRepo.create(dto);
     const project = await this.projectsService.getById(dto.projectId);
     const tags = await this.tagsService.getByIds(dto.tagsIds);
+    const shots = await this.shotsService.getByIds(dto.shotsIds);
+    const reels = await this.reelsService.getByIds(dto.reelsIds);
 
     if (tags) post.tags = tags;
+    if (shots) post.shots = shots;
+    if (reels) post.reels = reels;
     post.createdBy = user;
     post.project = project;
     return await this.postRepo.save(post);
@@ -30,17 +38,26 @@ export class PostsService {
 
   // Получить все посты
   async getAll(): Promise<Post[]> {
-    return await this.postRepo.find();
+    return await this.postRepo.find({
+      order: { createdAt: 'ASC' },
+    });
   }
 
-  // Получить все посты по ID проекта
-  async getByProjectId(id: number): Promise<Post[]> {
-    return await this.postRepo.find({ where: { projectId: id } });
+  // Получить все посты проекта
+  async getAllByProjectId(projectId: number): Promise<Post[] | []> {
+    if (!projectId) return null;
+    const posts = await this.postRepo.find({
+      where: { projectId: projectId },
+      relations: ['reels', 'shots'],
+      order: { createdAt: 'ASC' },
+    });
+    if (!posts) return [];
+    return posts;
   }
 
   // Получить пост по ID
   async getById(id: number): Promise<Post | null> {
-    const post = await this.postRepo.findOne(id);
+    const post = await this.postRepo.findOne(id, { relations: ['reels', 'shots'] });
     if (!post) throw new HttpException(`Пост с id=${id} не найден`, HttpStatus.NOT_FOUND);
     return post;
   }

@@ -5,10 +5,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ReelsType } from '@app/entities/reelsTypes/reelsType.entity';
 import { Repository } from 'typeorm';
 import { User } from '@app/entities/users/user.entity';
+import { StatusesService } from '@app/entities/statuses/statuses.service';
 
 @Injectable()
 export class ReelsTypesService {
-  constructor(@InjectRepository(ReelsType) public reelsTypesRepo: Repository<ReelsType>) {}
+  constructor(
+    @InjectRepository(ReelsType) public reelsTypesRepo: Repository<ReelsType>,
+    private statusesService: StatusesService,
+  ) {}
 
   // Создать новый тип ролика
   async create(user: User, dto: CreateReelsTypeDto): Promise<ReelsType> {
@@ -21,20 +25,28 @@ export class ReelsTypesService {
         HttpStatus.UNPROCESSABLE_ENTITY,
       );
     }
-    const reel = this.reelsTypesRepo.create(dto);
-    reel.createdBy = user;
-    return await this.reelsTypesRepo.save(reel);
+    const reelsType = this.reelsTypesRepo.create(dto);
+    reelsType.createdBy = user;
+    reelsType.status = await this.statusesService.getByCode(1);
+
+    return await this.reelsTypesRepo.save(reelsType);
   }
 
   // Получить все типы роликов
-  async getAll(projectId?: number): Promise<ReelsType[]> {
-    if (projectId) return await this.reelsTypesRepo.find({ where: { projectId } });
-    return await this.reelsTypesRepo.find();
+  async getAll(): Promise<ReelsType[]> {
+    return await this.reelsTypesRepo.find({ order: { code: 'ASC' } });
   }
 
-  // Получить все типы роликаи проеков
-  async getAllByProjectId(id: number): Promise<ReelsType[]> {
-    return await this.reelsTypesRepo.find({ where: { projectId: id } });
+  // Получить все типы роликав проека
+  async getAllByProjectId(projectId: number): Promise<ReelsType[] | null> {
+    if (!projectId) return null;
+    const reelsTypes = await this.reelsTypesRepo.find({
+      where: { projectId: projectId },
+      relations: ['reels'],
+      order: { code: 'ASC' },
+    });
+    if (!reelsTypes) return [];
+    return reelsTypes;
   }
 
   // Получить тип ролика по ID

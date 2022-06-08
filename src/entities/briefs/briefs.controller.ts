@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
 import { BriefsService } from './briefs.service';
 import { CreateBriefDto } from './dto/create-brief.dto';
 import { UpdateBriefDto } from './dto/update-brief.dto';
@@ -26,11 +26,12 @@ export class BriefsController {
     return this.briefsService.create(user, createBriefDto);
   }
 
-  // Получить все брифы
-  @Get()
-  @ApiOperation({ summary: 'Получить все брифы' })
+  // Получить брифы по фильтру
+  @Get('')
+  @ApiOperation({ summary: 'Получить брифы по фильтру' })
   @ApiResponse({ status: 200, type: [Brief] })
-  getAll(): Promise<Brief[]> {
+  getAllByProjectId(@Query('projectId') projectId: string): Promise<Brief[]> {
+    if (projectId) return this.briefsService.getAllByProjectId(+projectId);
     return this.briefsService.getAll();
   }
 

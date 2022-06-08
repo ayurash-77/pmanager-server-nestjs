@@ -27,6 +27,7 @@ export class ProjectsService {
   ) {}
 
   buildProjectResponse(project: Project): ProjectResponseInterface {
+    if (!project) return null;
     return {
       ...project,
       owner: {
@@ -108,13 +109,16 @@ export class ProjectsService {
   // Получить все проекты
   async getAll(): Promise<Project[]> {
     // return await this.projectsRepository.find({ relations: ['owner'] });
-    return await this.projectsRepository.find({ order: { title: 'ASC' } });
+    return await this.projectsRepository.find({
+      order: { title: 'ASC' },
+      // relations: ['briefs']
+    });
   }
 
   // Получить проект по ID
   async getById(id: number, options?: FindOneOptions): Promise<Project | null> {
     const project = await this.projectsRepository.findOne(id, options);
-    if (!project) throw new HttpException(`Проект с id=${id} не найден`, HttpStatus.NOT_FOUND);
+    if (!project) return null;
     // const dateStr = format(project.createdAt, 'yyyy.MM.dd');
     // console.log(dateStr);
     return project;

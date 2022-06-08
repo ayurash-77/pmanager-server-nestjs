@@ -26,20 +26,13 @@ export class ReelsTypesController {
     return this.reelsService.create(user, createReelsTypeDto);
   }
 
-  // Получить все типы роликов
+  // Получить типы роликов по фильтру
   @Get()
   @ApiOperation({ summary: 'Получить все типы роликов' })
   @ApiResponse({ status: 200, type: [ReelsType] })
   getAll(@Query('projectId') projectId?: string) {
-    return this.reelsService.getAll(+projectId);
-  }
-
-  // Получить все типы роликов проекта
-  @Get('projects/:id')
-  @ApiOperation({ summary: 'Получить все типы роликов проекта' })
-  @ApiResponse({ status: 200, type: [ReelsType] })
-  getAllByProjectId(@Param('id') id: string) {
-    return this.reelsService.getAllByProjectId(+id);
+    if (+projectId) return this.reelsService.getAllByProjectId(+projectId);
+    return this.reelsService.getAll();
   }
 
   // Получить тип ролика по ID
