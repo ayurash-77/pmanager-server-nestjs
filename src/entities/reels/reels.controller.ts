@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Put, Param, Delete, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
 import { ReelsService } from './reels.service';
 import { CreateReelDto } from './dto/create-reel.dto';
 import { UpdateReelDto } from './dto/update-reel.dto';
@@ -44,7 +44,7 @@ export class ReelsController {
   }
 
   // Изменить ролик по ID
-  @Put(':id')
+  @Patch(':id')
   @ApiOperation({ summary: 'Изменить ролик по ID' })
   @ApiResponse({ status: 200, type: Reel })
   @RoleDecorator('Producer', 'Art director', 'Manager')
