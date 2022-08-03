@@ -12,7 +12,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as colors from 'colors';
 import { ValidationPipe } from '@nestjs/common';
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4001;
 
 const mode = process.env.NODE_ENV.toUpperCase().split('-')[1];
 if (process.env.NODE_ENV == 'env-dev') {
@@ -38,8 +38,10 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/api/docs', app, document);
-  // app.setGlobalPrefix('/api');
+  app.setGlobalPrefix('/api');
   app.useGlobalPipes(new ValidationPipe());
+
+  app.enableCors();
 
   await app.listen(PORT);
 }

@@ -1,4 +1,14 @@
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  AfterLoad,
+  AfterUpdate,
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Project } from '@app/entities/projects/project.entity';
 import { User } from '@app/entities/users/user.entity';
@@ -50,6 +60,12 @@ export class Reel {
 
   @ManyToOne(() => ReelsType, reelsType => reelsType.reels, { onDelete: 'CASCADE' })
   reelsType: ReelsType;
+  @AfterLoad()
+  updateCode() {
+    const duration = this.duration.toString().padStart(2, '0');
+    this.code = `${this.reelsType?.code}_${duration}s`;
+    this.name = `${this.reelsType?.code} ${duration} sec`;
+  }
 
   @ApiProperty({ example: '1', description: 'IDs шотов' })
   @Column({

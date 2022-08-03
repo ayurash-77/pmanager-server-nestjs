@@ -30,15 +30,15 @@ import { TasksModule } from './entities/tasks/tasks.module';
 
     ServeStaticModule.forRoot({
       rootPath: `${appPath}/${process.env.UPLOAD_DIR}`,
-      serveRoot: `/${process.env.UPLOAD_DIR}`,
+      serveRoot: `/api/${process.env.UPLOAD_DIR}`,
     }),
     ServeStaticModule.forRoot({
       rootPath: `${appPath}/${process.env.STATIC_DIR}`,
-      serveRoot: `/${process.env.STATIC_DIR}`,
+      serveRoot: `/api/${process.env.STATIC_DIR}`,
     }),
     ServeStaticModule.forRoot({
       rootPath: `${process.env.WORK_ROOT}`,
-      serveRoot: '/root',
+      serveRoot: '/api/root',
     }),
     UsersModule,
     RolesModule,

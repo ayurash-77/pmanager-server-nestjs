@@ -21,7 +21,7 @@ export class ReelsTypesService {
     });
     if (candidate) {
       throw new HttpException(
-        `Тип ролика проекта с ID: '${dto.projectId}' и code: '${dto.code}' уже существует`,
+        `В проекте уже существует тип ролика '${dto.code}'`,
         HttpStatus.UNPROCESSABLE_ENTITY,
       );
     }
@@ -51,21 +51,34 @@ export class ReelsTypesService {
 
   // Получить тип ролика по ID
   async getById(id: number): Promise<ReelsType | null> {
-    const reel = await this.reelsTypesRepo.findOne(id);
-    if (!reel) throw new HttpException(`Тип ролика с id=${id} не найден`, HttpStatus.NOT_FOUND);
-    return reel;
+    const reelsType = await this.reelsTypesRepo.findOne(id);
+    if (!reelsType) throw new HttpException(`Тип ролика не найден`, HttpStatus.NOT_FOUND);
+    return reelsType;
   }
 
   // Изменить тип ролика по ID
-  async update(id: number, updateReelsTypeDto: UpdateReelsTypeDto): Promise<ReelsType> {
-    const reel = await this.getById(id);
-    Object.assign(reel, updateReelsTypeDto);
-    return this.reelsTypesRepo.save(reel);
+  async update(id: number, dto: UpdateReelsTypeDto): Promise<ReelsType> {
+    const reelsType = await this.getById(id);
+
+    if (dto.code !== reelsType.code) {
+      const candidate = await this.reelsTypesRepo.findOne({
+        where: { projectId: dto.projectId, code: dto.code },
+      });
+      if (candidate) {
+        throw new HttpException(
+          `В проекте уже существует тип ролика '${dto.code}'`,
+          HttpStatus.UNPROCESSABLE_ENTITY,
+        );
+      }
+    }
+
+    Object.assign(reelsType, dto);
+    return this.reelsTypesRepo.save(reelsType);
   }
 
   // Удалить тип ролика по ID
   async remove(id: number): Promise<ReelsType> {
-    const reel = await this.getById(id);
-    return this.reelsTypesRepo.remove(reel);
+    const reelsType = await this.getById(id);
+    return this.reelsTypesRepo.remove(reelsType);
   }
 }

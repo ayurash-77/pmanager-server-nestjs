@@ -93,6 +93,7 @@ export class ReelsService {
     const reel = await this.getById(id);
     Object.assign(reel, dto);
     await this.reelsRepo.save(reel);
+
     const shots = await this.shotsRepo.findByIds(dto.shotsIds);
     if (!shots) return await this.reelsRepo.save(reel);
     reel.shots = shots;

@@ -10,7 +10,7 @@ export class CreateReelsTypeDto {
   @IsAlphanumeric()
   @IsString({ message: `поле 'code' должно быть строкой` })
   @IsUppercase({ message: `поле 'code' должно быть в верхнем регистре` })
-  @Length(3, 4)
+  @Length(2, 4)
   code: string;
 
   @IsNumber({}, { message: `поле 'projectId' должно быть числом` })

@@ -20,7 +20,7 @@ export class ReelsTypesController {
   @Post()
   @ApiOperation({ summary: 'Создать новый тип ролика' })
   @ApiResponse({ status: 200, type: ReelsType })
-  @RoleDecorator('Producer', 'Art director', 'Manager')
+  @RoleDecorator('Producer', 'Art director', 'Manager', '2d artist', '3d artist', 'CG generalist')
   @UseGuards(RolesGuard)
   create(@UserDecorator() user: User, @Body() createReelsTypeDto: CreateReelsTypeDto): Promise<ReelsType> {
     return this.reelsService.create(user, createReelsTypeDto);
@@ -47,17 +47,17 @@ export class ReelsTypesController {
   @Patch(':id')
   @ApiOperation({ summary: 'Изменить тип ролика по ID' })
   @ApiResponse({ status: 200, type: ReelsType })
-  @RoleDecorator('Producer', 'Art director', 'Manager')
+  @RoleDecorator('Producer', 'Art director', 'Manager', '2d artist', '3d artist', 'CG generalist')
   @UseGuards(RolesGuard)
-  update(@Param('id') id: string, @Body() updateReelsTypeDto: UpdateReelsTypeDto) {
-    return this.reelsService.update(+id, updateReelsTypeDto);
+  update(@Param('id') id: string, @Body() dto: UpdateReelsTypeDto) {
+    return this.reelsService.update(+id, dto);
   }
 
   // Удалить тип ролика по ID
   @Delete(':id')
   @ApiOperation({ summary: 'Удалить тип ролика по ID' })
   @ApiResponse({ status: 200, type: ReelsType })
-  @RoleDecorator('Producer', 'Art director', 'Manager')
+  @RoleDecorator('Producer', 'Art director', 'Manager', '2d artist', '3d artist', 'CG generalist')
   @UseGuards(RolesGuard)
   remove(@Param('id') id: string) {
     return this.reelsService.remove(+id);

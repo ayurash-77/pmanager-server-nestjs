@@ -20,7 +20,7 @@ export class ReelsController {
   @Post()
   @ApiOperation({ summary: 'Создать новый ролик' })
   @ApiResponse({ status: 200, type: Reel })
-  @RoleDecorator('Producer', 'Art director', 'Manager')
+  @RoleDecorator('Producer', 'Art director', 'Manager', '2d artist', '3d artist', 'CG generalist')
   @UseGuards(RolesGuard)
   create(@UserDecorator() user: User, @Body() dto: CreateReelDto): Promise<Reel> {
     return this.sequencesService.create(user, dto);
@@ -47,7 +47,7 @@ export class ReelsController {
   @Patch(':id')
   @ApiOperation({ summary: 'Изменить ролик по ID' })
   @ApiResponse({ status: 200, type: Reel })
-  @RoleDecorator('Producer', 'Art director', 'Manager')
+  @RoleDecorator('Producer', 'Art director', 'Manager', '2d artist', '3d artist', 'CG generalist')
   @UseGuards(RolesGuard)
   update(@Param('id') id: string, @Body() dto: UpdateReelDto) {
     return this.sequencesService.update(+id, dto);
@@ -57,7 +57,7 @@ export class ReelsController {
   @Delete(':id')
   @ApiOperation({ summary: 'Удалить ролик по ID' })
   @ApiResponse({ status: 200, type: Reel })
-  @RoleDecorator('Producer', 'Art director', 'Manager')
+  @RoleDecorator('Producer', 'Art director', 'Manager', '2d artist', '3d artist', 'CG generalist')
   @UseGuards(RolesGuard)
   remove(@Param('id') id: string) {
     return this.sequencesService.remove(+id);
